@@ -1,7 +1,7 @@
+import { ServerAnimeService } from "@/services/server/server-anime.service"
 import { ServerUserService } from "@/services/server/server-user.service"
 
-import { ProfileContent } from "./components/profile-content"
-import { ServerAnimeService } from "@/services/server/server-anime.service"
+import { ProfileContent } from "@/components/profile"
 
 const userService = new ServerUserService()
 const animeService = new ServerAnimeService()
@@ -12,11 +12,9 @@ interface ProfileLayoutProps {
 }
 
 export default async function ProfileLayout(props: ProfileLayoutProps) {
-  const params = await props.params;
+  const params = await props.params
 
-  const {
-    children
-  } = props;
+  const { children } = props
 
   const user = await userService.getUser(params.username)
   const userStats = await animeService.getUserStats(user!.id)

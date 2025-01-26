@@ -6,7 +6,7 @@ import { Dot, Ellipsis } from "lucide-react"
 import { Anime } from "@/types/anime"
 import { Progress } from "@/components/ui/progress"
 
-import { SimpleAnimeCard } from "../../../../../components/anime-card"
+import { SimpleAnimeCard } from "../../../../../components/anime/anime-card"
 import {
   Accordion,
   AccordionContent,

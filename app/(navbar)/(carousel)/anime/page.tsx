@@ -1,7 +1,7 @@
 import React from "react"
 import { ServerAnimeService } from "@/services/server/server-anime.service"
 
-import { AnimeSearch } from "./components/anime-search"
+import { AnimeSearch } from "@/components/anime"
 
 const animeService = new ServerAnimeService()
 

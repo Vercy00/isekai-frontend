@@ -1,13 +1,11 @@
-"use sever"
-
-import { cookies, type UnsafeUnwrappedCookies } from "next/headers";
+import { cookies, type UnsafeUnwrappedCookies } from "next/headers"
 import axios from "axios"
 
 import { User } from "@/types/user"
 
 export class ServerUserService {
   async getCurrentUser() {
-    const cookie = (cookies() as unknown as UnsafeUnwrappedCookies)
+    const cookie = cookies() as unknown as UnsafeUnwrappedCookies
 
     try {
       return (

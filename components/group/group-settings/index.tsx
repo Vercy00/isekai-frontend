@@ -89,3 +89,6 @@ export function GroupSettings({ group }: GroupSettingsProps) {
     </Dialog>
   )
 }
+
+export * from "./members-settings"
+export * from "./translations-settings"

@@ -81,3 +81,6 @@ export function MembersSettings({ group }: MembersSettingsProps) {
     </Tabs>
   )
 }
+
+export * from "./fake-members-table/fake-members-table-row-actions"
+export * from "./members-table/members-table-row-actions"

@@ -1,6 +1,6 @@
 import { ServerFansubService } from "@/services/server/server-fansub.service"
 
-import { GroupsContent } from "./components/groups-content"
+import { GroupsContent } from "@/components/group"
 
 const fansubService = new ServerFansubService()
 
@@ -10,11 +10,9 @@ interface GroupLayoutProps {
 }
 
 export default async function Layout(props: GroupLayoutProps) {
-  const params = await props.params;
+  const params = await props.params
 
-  const {
-    children
-  } = props;
+  const { children } = props
 
   const groupName = params.groupName.replaceAll("_", " ")
   const group = await fansubService.getGroup(groupName)

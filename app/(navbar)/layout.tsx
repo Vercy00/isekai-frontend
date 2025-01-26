@@ -7,8 +7,8 @@ import { ServerNotificationService } from "@/services/server/server-notification
 import { Notification } from "@/types/notification"
 import { mainConfig } from "@/config/main"
 import { NotificationProvider } from "@/lib/notification-lib"
-import { MainNav } from "@/components/main-nav"
-import { SiteFooter } from "@/components/site-footer"
+import { MainNav } from "@/components/layout/main-nav"
+import { SiteFooter } from "@/components/layout/site-footer"
 import { UserButton } from "@/components/user-button"
 
 const notificationService = new ServerNotificationService()

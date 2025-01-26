@@ -1,6 +1,6 @@
 import { ServerFansubService } from "@/services/server/server-fansub.service"
 
-import { PostContent } from "./components/post-content"
+import { PostContent } from "@/components/group"
 
 const fansubService = new ServerFansubService()
 

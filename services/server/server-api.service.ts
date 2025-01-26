@@ -1,5 +1,3 @@
-"use sever"
-
 import { cache } from "react"
 import axios, { AxiosInstance } from "axios"
 
@@ -12,7 +10,7 @@ export class ServerApi {
   clientId = process.env.CLIENT_ID as string
   clientSecret = process.env.CLIENT_SECRET as string
   authUrl = "https://sso.isekai.pl/realms/isekai/protocol/openid-connect/token"
-  baseUrl = "https://api.isekai.pl/v1"
+  baseUrl = "http://localhost:8080/v1" //"https://api.isekai.pl/v1"
   token = { expiresIn: new Date(), accessToken: "" }
   instance: AxiosInstance
 

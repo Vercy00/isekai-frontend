@@ -14,7 +14,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 
-import { SimpleAnimeCard } from "./anime-card"
+import { SimpleAnimeCard } from "./"
 
 interface AutoplayAnimeCarouselProps {
   delay?: number

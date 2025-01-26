@@ -1,6 +1,6 @@
 import { FansubService } from "@/services/client/fansub.service"
 
-import { GroupListTab } from "../components/group-list-tab"
+import { GroupListTab } from "@/components/group"
 
 const fansubService = new FansubService()
 

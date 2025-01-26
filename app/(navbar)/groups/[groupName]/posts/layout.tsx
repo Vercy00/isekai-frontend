@@ -1,7 +1,6 @@
 import { ServerFansubService } from "@/services/server/server-fansub.service"
 
-import { GroupListTab } from "../components/group-list-tab"
-import { GroupPosts } from "../components/group-posts"
+import { GroupListTab, GroupPosts } from "@/components/group"
 
 const fansubService = new ServerFansubService()
 
@@ -11,11 +10,9 @@ interface PostsLayoutProps {
 }
 
 export default async function Layout(props: PostsLayoutProps) {
-  const params = await props.params;
+  const params = await props.params
 
-  const {
-    children
-  } = props;
+  const { children } = props
 
   const groupName = params.groupName.replaceAll("_", " ")
   const posts = await fansubService.getPosts(

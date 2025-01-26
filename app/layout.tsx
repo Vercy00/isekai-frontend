@@ -13,7 +13,7 @@ import StoreProvider from "@/lib/store-provider"
 import { SubtitleSocketProvider } from "@/lib/subtitle-lib"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Toaster } from "@/components/ui/sonner"
-import { CookieBanner } from "@/components/cookie-banner"
+import { CookieBanner } from "@/components/layout/cookie-banner"
 
 const inter = Inter({ subsets: ["latin"] })
 const lexend = Lexend({ subsets: ["latin"] })

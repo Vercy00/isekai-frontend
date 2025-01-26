@@ -1,6 +1,4 @@
-"use sever"
-
-import { cookies, type UnsafeUnwrappedCookies } from "next/headers";
+import { cookies } from "next/headers"
 import axios from "axios"
 
 import {
@@ -50,7 +48,7 @@ export class ServerAnimeService extends ServerApi {
   }
 
   async getUserList(animeId: number) {
-    const cookieStore = (cookies() as unknown as UnsafeUnwrappedCookies)
+    const cookieStore = await cookies()
 
     return (
       await axios.get<UserList>(

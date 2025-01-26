@@ -8,7 +8,7 @@ import InfiniteScroll from "react-infinite-scroll-component"
 
 import { Anime, AnimeFilters } from "@/types/anime"
 import { ItemPage } from "@/types/page"
-import { SimpleAnimeCard } from "@/components/anime-card"
+import { SimpleAnimeCard } from "@/components/anime/anime-card"
 
 import AnimeSearchForm, { AnimeSearchFormProps } from "./anime-search-form"
 

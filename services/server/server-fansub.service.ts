@@ -1,5 +1,3 @@
-"use sever"
-
 import { Group, GroupStats, Post } from "@/types/fansub"
 import { ItemPage } from "@/types/page"
 

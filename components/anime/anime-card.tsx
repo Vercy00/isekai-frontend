@@ -9,9 +9,9 @@ import { Anime, AnimeRelationType } from "@/types/anime"
 import { GroupNode } from "@/types/fansub"
 import { cn } from "@/lib/utils"
 
+import { Badge } from "../ui/badge"
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "../ui/hover-card"
 import { AnimeThumbnail } from "./anime-thumbnail"
-import { Badge } from "./ui/badge"
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card"
 
 const colors = ["109 40 217", "253 186 116", "163 230 53"]
 

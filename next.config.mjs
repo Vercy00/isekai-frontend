@@ -10,16 +10,16 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "placehold.co"
+        hostname: "placehold.co",
       },
       {
         protocol: "https",
-        hostname: "isekai.pl"
+        hostname: "isekai.pl",
       },
       {
         protocol: "https",
-        hostname: "api.isekai.pl"
-      }
+        hostname: "api.isekai.pl",
+      },
     ],
   },
   async rewrites() {

@@ -17,8 +17,8 @@ import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { SimpleAnimeCard } from "@/components/anime-card"
-import { AnimeThumbnail } from "@/components/anime-thumbnail"
+import { SimpleAnimeCard } from "@/components/anime/anime-card"
+import { AnimeThumbnail } from "@/components/anime/anime-thumbnail"
 
 const animeService = new AnimeService()
 const fansubService = new FansubService()

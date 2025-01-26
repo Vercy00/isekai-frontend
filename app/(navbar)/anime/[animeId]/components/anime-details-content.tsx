@@ -8,39 +8,28 @@ import { useAppSelector } from "@/store/root-store"
 import { TRANSLATION } from "@/translations/pl-pl"
 import { format } from "date-fns"
 import { pl } from "date-fns/locale"
-import { Dot, Download, Ellipsis, Share2 } from "lucide-react"
+import { Dot, Ellipsis, Share2 } from "lucide-react"
 
 import { Anime, AnimeScore, Episode, UserList } from "@/types/anime"
 import { Subtitle, Translation } from "@/types/fansub"
 import { ItemPage } from "@/types/page"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Progress } from "@/components/ui/progress"
-
-import { SimpleAnimeCard } from "../../../../../components/anime-card"
-import { AnimeThumbnail } from "../../../../../components/anime-thumbnail"
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../../../../../components/ui/accordion"
-import { Badge } from "../../../../../components/ui/badge"
-import { Button, buttonVariants } from "../../../../../components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../../../../../components/ui/dialog"
-import { ScrollArea, ScrollBar } from "../../../../../components/ui/scroll-area"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import {
   Select,
   SelectContent,
@@ -49,19 +38,19 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "../../../../../components/ui/select"
+} from "@/components/ui/select"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../../../../../components/ui/tooltip"
-import { AnimeListForm } from "./anime-list-form"
-import { EpisodeCard } from "./episode-card"
-import { MobileAnimeDetailsContent } from "./mobile-anime-details-content"
-import { ScoreForm } from "./score-form"
-import { SubtitlesDownload } from "./subtitles-download"
-import { SubtitlesForm } from "./subtitles-form"
+} from "@/components/ui/tooltip"
+import { SimpleAnimeCard } from "@/components/anime"
+import { AnimeListForm } from "@/components/anime/anime-list-form"
+import { AnimeThumbnail } from "@/components/anime/anime-thumbnail"
+import { EpisodeCard } from "@/components/episode/episode-card"
+import { ScoreForm } from "@/components/score/score-form"
+import { SubtitlesDownload, SubtitlesForm } from "@/components/subtitles"
 
 const fansubService = new FansubService()
 

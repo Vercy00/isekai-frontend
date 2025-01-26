@@ -51,10 +51,11 @@ export default async function AnimeDetails(request: any) {
   const cookie = await cookies()
   let userList
 
-  if (cookie.has("SESSION"))
+  if (cookie.has("SESSION")) {
     try {
       userList = await animeService.getUserList(animeId)
     } catch {}
+  }
 
   return (
     <AnimeDetailsContent

@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table"
 
 import { Translation } from "@/types/fansub"
 import { DataTableColumnHeader } from "@/components/ui/advanced-table"
-import { AnimeThumbnail } from "@/components/anime-thumbnail"
+import { AnimeThumbnail } from "@/components/anime/anime-thumbnail"
 
 import { DataTableRowActions } from "./anime-table-row-actions"
 

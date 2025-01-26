@@ -6,7 +6,7 @@ import { Post } from "@/types/fansub"
 import { ItemPage } from "@/types/page"
 
 import { GroupPost } from "./group-post"
-import { PostForm } from "./post-form"
+import { PostForm } from "./post/post-form"
 
 interface GroupPostsProps {
   posts: ItemPage<Post>

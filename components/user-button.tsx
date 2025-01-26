@@ -9,7 +9,7 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden"
 import { useNotification } from "@/lib/notification-lib"
 import { cn } from "@/lib/utils"
 
-import { Notifications } from "./notifications"
+import { Notifications } from "./layout/notifications"
 import { Button, buttonVariants } from "./ui/button"
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card"
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group"

@@ -13,7 +13,7 @@ import { toast } from "sonner"
 import { Notification } from "@/types/notification"
 import { useNotification } from "@/lib/notification-lib"
 
-import { Button } from "./ui/button"
+import { Button } from "../ui/button"
 import {
   Dialog,
   DialogContent,
@@ -21,9 +21,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog"
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
-import { ScrollArea } from "./ui/scroll-area"
+} from "../ui/dialog"
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
+import { ScrollArea } from "../ui/scroll-area"
 import {
   Select,
   SelectContent,
@@ -31,7 +31,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select"
+} from "../ui/select"
 
 const NOTIFICATION_TYPE = {
   all: "Wszystko" /*series: "Serie", admin: "Admin"*/,

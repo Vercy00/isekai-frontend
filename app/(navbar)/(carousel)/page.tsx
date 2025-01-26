@@ -2,8 +2,7 @@ import React from "react"
 import { FansubService } from "@/services/client/fansub.service"
 import { ServerAnimeService } from "@/services/server/server-anime.service"
 
-import { MediumAnimeCard } from "@/components/anime-card"
-import { AutoplayAnimeCarousel } from "@/components/autoplay-anime-carousel"
+import { AutoplayAnimeCarousel, MediumAnimeCard } from "@/components/anime"
 
 const animeService = new ServerAnimeService()
 const fansubService = new FansubService()

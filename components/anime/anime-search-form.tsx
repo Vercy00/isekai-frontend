@@ -1,7 +1,6 @@
 "use client"
 
 import React from "react"
-import { ta } from "date-fns/locale"
 import { SettingsIcon } from "lucide-react"
 
 import {
@@ -11,21 +10,14 @@ import {
   AnimeTag,
 } from "@/types/anime"
 import { useMediaQuery } from "@/hooks/use-media-query"
-
-import { Button } from "../../../../../components/ui/button"
-import Combobox, {
-  ComboboxAcordion,
-} from "../../../../../components/ui/combobox"
-import {
-  Drawer,
-  DrawerContent,
-  DrawerTrigger,
-} from "../../../../../components/ui/drawer"
-import { Input } from "../../../../../components/ui/input"
+import { Button } from "@/components/ui/button"
+import Combobox, { ComboboxAcordion } from "@/components/ui/combobox"
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer"
+import { Input } from "@/components/ui/input"
 import MultiCombobox, {
   MultiComboboxAcordion,
-} from "../../../../../components/ui/multi-combobox"
-import { ScrollArea } from "../../../../../components/ui/scroll-area"
+} from "@/components/ui/multi-combobox"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export interface AnimeSearchFormProps {
   mediaTypes: AnimeMediaType[]

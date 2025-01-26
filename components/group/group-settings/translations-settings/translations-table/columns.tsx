@@ -5,7 +5,7 @@ import { Plus } from "lucide-react"
 import { Translation } from "@/types/fansub"
 import { DataTableColumnHeader } from "@/components/ui/advanced-table"
 import { Button } from "@/components/ui/button"
-import { AnimeThumbnail } from "@/components/anime-thumbnail"
+import { AnimeThumbnail } from "@/components/anime/anime-thumbnail"
 
 import { STATUSES } from "../../../group-list-tab"
 import { TranslationsTableRowActions } from "./translations-table-row-actions"

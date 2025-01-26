@@ -1,6 +1,6 @@
 import { FansubService } from "@/services/client/fansub.service"
 
-import { GroupPageContent } from "./components/group-page-content"
+import { GroupPageContent } from "@/components/group"
 
 const fansubService = new FansubService()
 
