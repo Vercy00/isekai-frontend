@@ -19,8 +19,8 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel"
 
-import { Indicator } from "./indicator"
-import { buttonVariants } from "./ui/button"
+import { Indicator } from "../indicator"
+import { buttonVariants } from "../ui/button"
 
 interface MainCarouselProps {
   animeList: ItemPage<Anime>
@@ -76,7 +76,7 @@ export function MainCarousel({ animeList }: MainCarouselProps) {
                       className="object-cover"
                     />
 
-                    <div className="absolute bottom-0 z-10 flex h-1/2 w-full flex-col bg-background/50 p-6 backdrop-blur-md md:bottom-auto md:h-full md:w-1/2 md:gap-6">
+                    <div className="bg-background/50 absolute bottom-0 z-10 flex h-1/2 w-full flex-col p-6 backdrop-blur-md md:bottom-auto md:h-full md:w-1/2 md:gap-6">
                       <div className="grid gap-3">
                         <h2 className="line-clamp-1 text-4xl md:line-clamp-2">
                           {anime.title}
@@ -115,7 +115,7 @@ export function MainCarousel({ animeList }: MainCarouselProps) {
                         href={`/anime/${anime.id}/${anime.title.replaceAll(" ", "_").replaceAll(/[^a-zA-Z0-9_ ]/gm, "_")}`}
                         className={cn(
                           buttonVariants({ variant: "default" }),
-                          "mt-3 w-fit border-2 border-primary bg-transparent"
+                          "border-primary mt-3 w-fit border-2 bg-transparent"
                         )}
                       >
                         Przejdź do serii

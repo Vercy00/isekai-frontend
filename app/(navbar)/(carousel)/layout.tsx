@@ -1,6 +1,6 @@
 import { ServerAnimeService } from "@/services/server/server-anime.service"
 
-import { MainCarousel } from "@/components/main-carousel"
+import { MainCarousel } from "@/components/layout"
 
 interface CarouselLayoutProps {
   children: React.ReactNode
