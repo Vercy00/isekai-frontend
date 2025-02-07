@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react"
+import { useSubtitlesSocket } from "@/contexts/global/subtitles-subtitles"
 import { Download } from "lucide-react"
 import { toast } from "sonner"
 
-import { useSocketContext } from "@/lib/subtitle-lib"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Dialog,
@@ -32,7 +32,7 @@ export function SubtitlesDownload({
   groupName,
   animeId,
 }: SubtitlesDownloadProps) {
-  const [simpName, addOnMessage] = useSocketContext()
+  const [simpName, addOnMessage] = useSubtitlesSocket()
   const [downloading, setDownloading] = useState(false)
   const [status, setStatus] = useState<Status | null>()
   const toastId = useRef<string | number>(null)

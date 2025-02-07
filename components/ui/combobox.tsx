@@ -35,6 +35,7 @@ interface ComboboxCommandProps<T> {
   getId: (value: T) => string
   getItem: (value: T) => React.ReactNode
   emptyMessage?: string
+  withInput?: boolean
 }
 
 export function ComboboxCommand<T>({
@@ -45,6 +46,7 @@ export function ComboboxCommand<T>({
   getId,
   getItem,
   emptyMessage,
+  withInput = true,
 }: ComboboxCommandProps<T>) {
   const [selectedValue, setSelectedValue] = React.useState<T | null>(null)
 
@@ -61,9 +63,11 @@ export function ComboboxCommand<T>({
 
   return (
     <Command>
-      <CommandInput placeholder={`${placeholder}...`} />
+      {withInput && <CommandInput placeholder={`${placeholder}...`} />}
       <CommandList>
-        <CommandEmpty>{emptyMessage || "Brak wyników."}</CommandEmpty>
+        {withInput && (
+          <CommandEmpty>{emptyMessage || "Brak wyników."}</CommandEmpty>
+        )}
         <CommandGroup>
           <ScrollArea maxHeight="max-h-40">
             {options.map((option) => (
@@ -90,7 +94,7 @@ export function ComboboxCommand<T>({
 
 interface ComboboxProps<T> extends ComboboxCommandProps<T> {
   disabled?: boolean
-  className?: React.ComponentProps<"div">["className"]
+  className?: string
 }
 
 export default function Combobox<T>({
@@ -102,6 +106,7 @@ export default function Combobox<T>({
   getItem,
   disabled,
   className,
+  withInput,
 }: ComboboxProps<T>) {
   const [selectedValue, setSelectedValue] = React.useState<T | null>(null)
   const [open, setOpen] = React.useState(false)
@@ -121,7 +126,7 @@ export default function Combobox<T>({
           className={cn("w-[200px] justify-between", className)}
         >
           {selectedValue ? (
-            getId(
+            getItem(
               options.find((option) => getId(option) == getId(selectedValue))!
             )
           ) : (
@@ -138,6 +143,7 @@ export default function Combobox<T>({
           value={value}
           getId={getId}
           getItem={getItem}
+          withInput={withInput}
         />
       </PopoverContent>
     </Popover>

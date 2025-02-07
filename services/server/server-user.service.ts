@@ -1,27 +1,11 @@
-import { cookies, type UnsafeUnwrappedCookies } from "next/headers"
-import axios from "axios"
-
 import { User } from "@/types/user"
 
-export class ServerUserService {
-  async getCurrentUser() {
-    const cookie = cookies() as unknown as UnsafeUnwrappedCookies
+import { ServerApi } from "./server-api.service"
 
-    try {
-      return (
-        await axios.get<User>("https://api.isekai.pl/v1/users/@me", {
-          headers: {
-            Cookie: cookie.toString(),
-          },
-        })
-      ).data
-    } catch (e) {
-      return null
-    }
-  }
-
+class ServerUserService extends ServerApi {
   async getUser(username: string) {
-    return (await axios.get<User>(`https://api.isekai.pl/v1/users/${username}`))
-      .data
+    return await this._get<User>(`/users/${username}`)
   }
 }
+
+export { ServerUserService }

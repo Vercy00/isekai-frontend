@@ -9,11 +9,10 @@ export type AnimeMediaType = {
   name: "tv" | "ova" | "movie" | "special" | "ona"
 }
 
-export type AnimeStatus =
-  | "finished_airing"
-  | "ongoing"
-  | "not_yet_aired"
-  | "interrupted"
+export type AnimeStatus = {
+  id: number
+  name: "finished_airing" | "ongoing" | "not_yet_aired" | "interrupted"
+}
 
 export type AnimeTag = {
   id: number
@@ -96,8 +95,38 @@ export type Episode = {
   episodeNum: number
 }
 
+// export type Anime = {
+//   id: number | null
+//   title: string
+//   episodesCount: number
+//   alternativeTitles: AlternativeTitles
+//   startDate: Date | null
+//   endDate: Date | null
+//   synopsis: string | null
+//   nsfw: boolean
+//   createdAt: string
+//   updatedAt: string
+//   mediaType: AnimeMediaType | null
+//   status: AnimeStatus
+//   tags: AnimeTag[]
+//   numEpisodes: number | null
+//   startSeason: AnimeStartSeason | null
+//   broadcast: AnimeBroadcast
+//   source: AnimeSource | null
+//   averageEpisodeDuration: number
+//   rating: AnimeRating | null
+//   relationships: AnimeRelatedAnime[]
+//   studios: AnimeStudio[] | null
+//   malId: number | null
+//   score: AnimeScore
+//   popularity: number
+//   hide: boolean
+//   thumbnailUrl: string
+//   bannerUrl: string
+// }
+
 export type Anime = {
-  id: number | null
+  id: number
   title: string
   episodesCount: number
   alternativeTitles: AlternativeTitles

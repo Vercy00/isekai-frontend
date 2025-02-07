@@ -1,7 +1,9 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { ANIME } from "@/const/anime"
+import { ANIME } from "@/constants/anime"
+import { useUserList } from "@/contexts/local/anime"
+import { useAnime } from "@/contexts/local/anime/use-anime"
 import { AnimeService } from "@/services/client/anime.service"
 import { TRANSLATION } from "@/translations/pl-pl"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -10,7 +12,6 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
 
-import { UserList } from "@/types/anime"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -54,38 +55,20 @@ const FormSchema = z.object({
   }),
 })
 
-interface ScoreFormProps {
-  animeId: number
-  userList?: UserList
-  setUserList: React.Dispatch<React.SetStateAction<UserList | undefined>>
-}
-
-const defaultScore = {
-  animation: 0,
-  characters: 0,
-  music: 0,
-  plot: 0,
-}
-
-const defaultUserList: UserList = {
-  watchedEpisodes: 0,
-  score: null,
-  status: null,
-  favorite: false,
-}
-
-export function ScoreForm({
-  animeId,
-  userList = defaultUserList,
-  setUserList,
-}: ScoreFormProps) {
+export function ScoreForm() {
+  const { id: animeId } = useAnime()
+  const { userList, setUserList } = useUserList()
   const [open, setOpen] = useState(false)
-  const [userListState, setUserListState] = useState(userList)
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       score: {
-        ...(userListState.score || defaultScore),
+        ...(userList.score || {
+          animation: 0,
+          characters: 0,
+          music: 0,
+          plot: 0,
+        }),
       },
     },
     mode: "onChange",
@@ -103,16 +86,15 @@ export function ScoreForm({
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     await new Promise((resolve) =>
       toast.promise(animeService.patchUserStatus(animeId, data), {
-        loading: userListState.score
+        loading: userList.score
           ? "Dodawanie oceny..."
           : "Aktualizowanie oceny...",
         success: (res) => {
           resolve(false)
-          setUserListState(res.data!)
           setUserList(res.data!)
           setOpen(false)
 
-          return userListState.score
+          return userList.score
             ? "Ocena została dodana"
             : "Ocena została zaktualizowana"
         },
@@ -135,7 +117,7 @@ export function ScoreForm({
           loading: "Usuwanie oceny...",
           success: (res) => {
             resolve(false)
-            setUserList((list) => (list ? { ...list, score: null } : undefined))
+            setUserList(res.data!)
             setOpen(false)
             return "Ocena została usunięta"
           },
@@ -151,7 +133,7 @@ export function ScoreForm({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>{!userListState.score ? "Dodaj ocenę" : "Zmień ocenę"}</Button>
+        <Button>{!userList.score ? "Dodaj ocenę" : "Zmień ocenę"}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -169,7 +151,7 @@ export function ScoreForm({
                   <FormItem>
                     <FormLabel className="flex items-center justify-between">
                       {TRANSLATION.ANIME_SCORE[score.name]}
-                      <span className="w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm text-muted-foreground">
+                      <span className="text-muted-foreground w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm">
                         {field.value}
                       </span>
                     </FormLabel>
@@ -193,7 +175,7 @@ export function ScoreForm({
             <div className="grid gap-4">
               <div className="flex items-center justify-between">
                 <Label htmlFor="mean">Średnia</Label>
-                <span className="w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm text-muted-foreground hover:border-border">
+                <span className="text-muted-foreground hover:border-border w-12 rounded-md border border-transparent px-2 py-0.5 text-right text-sm">
                   {mean}
                 </span>
               </div>
@@ -208,7 +190,7 @@ export function ScoreForm({
             </div>
 
             <DialogFooter>
-              {!!userListState.score && (
+              {!!userList.score && (
                 <Button
                   type="button"
                   variant="destructive"
@@ -219,7 +201,7 @@ export function ScoreForm({
                 </Button>
               )}
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {!userListState.score ? "Dodaj" : "Edytuj"}
+                {!userList.score ? "Dodaj" : "Edytuj"}
               </Button>
             </DialogFooter>
           </form>

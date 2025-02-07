@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { ANIME_LIST_STATUS } from "@/const/animeListStatus"
+import { ANIME_LIST_STATUS } from "@/constants/anime-list-status"
+import { useAnime, useUserList } from "@/contexts/local/anime"
 import { AnimeService } from "@/services/client/anime.service"
 import { TRANSLATION } from "@/translations/pl-pl"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -19,6 +20,7 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import {
@@ -39,31 +41,9 @@ const FormSchema = z.object({
   status: z.string(),
 })
 
-interface AnimeListFormProps {
-  animeId: number
-  numEpisodes?: number | null
-  userList?: UserListReq
-  setUserList: React.Dispatch<React.SetStateAction<UserList | undefined>>
-}
-
-const defaultUserList: UserListReq = {
-  watchedEpisodes: 0,
-  score: {
-    animation: 0,
-    characters: 0,
-    music: 0,
-    plot: 0,
-  },
-  status: null,
-  favorite: false,
-}
-
-export function AnimeListForm({
-  animeId,
-  numEpisodes,
-  userList = defaultUserList,
-  setUserList,
-}: AnimeListFormProps) {
+export function AnimeListForm() {
+  const { id: animeId, numEpisodes } = useAnime()
+  const { userList, setUserList } = useUserList()
   const [open, setOpen] = useState(false)
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -134,7 +114,7 @@ export function AnimeListForm({
         loading: "Usuwanie z listy...",
         success: (res) => {
           resolve(false)
-          setUserList(undefined)
+          setUserList(res.data!)
           setOpen(false)
 
           return "Usunięto z listy"
@@ -160,7 +140,9 @@ export function AnimeListForm({
           <Form {...form}>
             <DialogHeader>
               <DialogHeader>
-                {!userList.status ? "Dodaj do listy" : "Edytuj listę"}
+                <DialogTitle>
+                  {!userList.status ? "Dodaj do listy" : "Edytuj listę"}
+                </DialogTitle>
               </DialogHeader>
             </DialogHeader>
 
@@ -175,7 +157,7 @@ export function AnimeListForm({
                       <RadioGroup
                         {...field}
                         onValueChange={field.onChange}
-                        className="flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground"
+                        className="bg-muted text-muted-foreground flex h-10 items-center justify-center rounded-md p-1"
                       >
                         {ANIME_LIST_STATUS.STATUS.map((status) => (
                           <div
@@ -224,9 +206,9 @@ export function AnimeListForm({
                                     : parseInt(val)
                                 )
                             }}
-                            className="w-48 pl-3 pr-[6.75rem] text-center"
+                            className="w-48 pr-[6.75rem] pl-3 text-center"
                           />
-                          <span className="pointer-events-none absolute right-0 top-0 flex h-full w-24 items-center justify-center border-l p-3 text-sm">
+                          <span className="pointer-events-none absolute top-0 right-0 flex h-full w-24 items-center justify-center border-l p-3 text-sm">
                             {numEpisodes || "N/A"}
                           </span>
                         </div>

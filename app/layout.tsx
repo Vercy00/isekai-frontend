@@ -1,22 +1,33 @@
-import type { Metadata } from "next"
+import { ReactNode } from "react"
 import { Inter, Lexend } from "next/font/google"
 
 import "@/styles/globals.css"
 
-import { cookies } from "next/headers"
-import { ServerUserService } from "@/services/server/server-user.service"
-import { IUserState } from "@/store/user-slice"
+import { Metadata } from "next"
+import { headers } from "next/headers"
+import { Providers } from "@/contexts/providers"
+import { UserService } from "@/services/client/user.service"
 import { GoogleAnalytics } from "@next/third-parties/google"
+import { dir } from "i18next"
+import { getServerSession } from "next-auth"
 
 import { siteConfig } from "@/config/site"
-import StoreProvider from "@/lib/store-provider"
-import { SubtitleSocketProvider } from "@/lib/subtitle-lib"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { initTranslations } from "@/lib/i18n"
+import { defaultNS } from "@/lib/i18n/settings"
+import { IUserState } from "@/lib/store/user-slice"
 import { Toaster } from "@/components/ui/sonner"
-import { CookieBanner } from "@/components/layout/cookie-banner"
+import { CookieBanner } from "@/components/layout"
+
+import { authOptions } from "./auth/[...nextauth]/route"
 
 const inter = Inter({ subsets: ["latin"] })
 const lexend = Lexend({ subsets: ["latin"] })
+
+const userService = new UserService()
+
+type RootLayoutProps = {
+  children: ReactNode
+}
 
 export const metadata: Metadata = {
   title: {
@@ -26,44 +37,41 @@ export const metadata: Metadata = {
   description: "Baza anime oraz napisów",
 }
 
-const userService = new ServerUserService()
+export default async function RootLayout({ children }: RootLayoutProps) {
+  const headersList = await headers()
+  const session = await getServerSession(authOptions)
+  const lang = headersList.get("x-locale")!
+  const { resources } = await initTranslations(lang, [defaultNS])
+  let initUser: IUserState | undefined
 
-export default async function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
-  const cookie = await cookies()
-  let initUserStore: IUserState | undefined = undefined
+  if (session) {
+    const user = (await userService.getCurrentUser()).data
 
-  if (cookie.has("SESSION")) {
-    const user = await userService.getCurrentUser()
-
-    initUserStore = {
+    initUser = {
       isAuthorized: true,
       user,
-    } as IUserState
+    }
   }
 
+  // console.log(session)
+
   return (
-    <StoreProvider initState={initUserStore}>
-      <html lang="pl">
-        <head />
-        <body
-          className="min-h-screen bg-background font-sans antialiased"
-          style={{
-            fontFamily: `${lexend.style.fontFamily}, ${inter.style.fontFamily}`,
-          }}
-        >
-          <SubtitleSocketProvider>
-            <div className="h-screen">{children}</div>
-          </SubtitleSocketProvider>
-          <Toaster richColors />
-          <CookieBanner />
-        </body>
-      </html>
-      <GoogleAnalytics gaId="G-VS8HDZG153" />
-    </StoreProvider>
+    <html lang={lang} dir={dir(lang)} className="dark">
+      <head />
+      <body
+        className="bg-background min-h-screen font-sans antialiased"
+        style={{
+          fontFamily: `${lexend.style.fontFamily}, ${inter.style.fontFamily}`,
+        }}
+      >
+        <Providers initUser={initUser} locale={lang} resources={resources}>
+          {children}
+        </Providers>
+        <Toaster richColors />
+        <CookieBanner />
+        <GoogleAnalytics gaId="G-VS8HDZG153" />
+      </body>
+    </html>
   )
 }
 

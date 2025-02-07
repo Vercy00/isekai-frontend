@@ -3,11 +3,7 @@ import { ItemPage } from "@/types/page"
 
 import { ServerApi } from "./server-api.service"
 
-export class ServerFansubService extends ServerApi {
-  constructor() {
-    super()
-  }
-
+class ServerFansubService extends ServerApi {
   async getGroup(groupName: number) {
     return await this._get<Group>(`/fansub/groups/${groupName}`)
   }
@@ -20,3 +16,5 @@ export class ServerFansubService extends ServerApi {
     return await this._get<ItemPage<Post>>(`/fansub/groups/${groupName}/posts`)
   }
 }
+
+export { ServerFansubService }

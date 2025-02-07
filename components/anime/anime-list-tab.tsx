@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { ANIME_LIST_STATUS } from "@/const/animeListStatus"
+import { ANIME_LIST_STATUS } from "@/constants/anime-list-status"
 import { AnimeService } from "@/services/client/anime.service"
 import { TRANSLATION } from "@/translations/pl-pl"
 

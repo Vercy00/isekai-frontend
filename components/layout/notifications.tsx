@@ -5,7 +5,7 @@ import {
   getNotificationContent,
   getNotificationTitle,
   NOTIFIACTION_TRANSLATION,
-} from "@/const/notification"
+} from "@/constants/notification"
 import axios, { AxiosError } from "axios"
 import { Bell } from "lucide-react"
 import { toast } from "sonner"
@@ -47,12 +47,12 @@ export function Notifications() {
         <Button variant="secondary" className="relative aspect-square p-2">
           <Bell />
           {notifications.length > 0 && (
-            <div className="absolute right-0 top-0 size-3 -translate-y-1/3 translate-x-1/3 rounded-full bg-red-600" />
+            <div className="absolute top-0 right-0 size-3 -translate-y-1/3 translate-x-1/3 rounded-full bg-red-600" />
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent side="bottom" align="end" className="grid gap-3">
-        <h4 className="font-medium leading-none">Powiadomienia</h4>
+        <h4 className="leading-none font-medium">Powiadomienia</h4>
 
         <Select
           value={notType}
@@ -117,9 +117,9 @@ function NotificationCard(props: NotificationCardProps) {
     >
       <button
         type="button"
-        className="w-full rounded-sm p-3 text-left hover:bg-muted"
+        className="hover:bg-muted w-full rounded-sm p-3 text-left"
       >
-        <h5 className="font-medium leading-none">
+        <h5 className="leading-none font-medium">
           {getNotificationTitle(props)}
         </h5>
         <p className="line-clamp-2 text-sm font-light">

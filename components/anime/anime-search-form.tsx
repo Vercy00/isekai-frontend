@@ -65,7 +65,12 @@ export default function AnimeSearchForm({
                   tag.type?.toLocaleLowerCase() === "genre" &&
                   filters.tagIds?.includes(tag.id)
               )}
-              onValueChange={(val) => handleOnChange("tagIds", val)}
+              onValueChange={(val) =>
+                handleOnChange(
+                  "tagIds",
+                  val.map(({ id }) => id)
+                )
+              }
               getId={(o) => o.id.toString()}
               getItem={(o) => o.name}
               placeholder={"Gatunki"}
@@ -80,7 +85,12 @@ export default function AnimeSearchForm({
                   tag.type?.toLocaleLowerCase() === "theme" &&
                   filters.tagIds?.includes(tag.id)
               )}
-              onValueChange={(val) => handleOnChange("tagIds", val)}
+              onValueChange={(val) =>
+                handleOnChange(
+                  "tagIds",
+                  val.map(({ id }) => id)
+                )
+              }
               getId={(o) => o.id.toString()}
               getItem={(o) => o.name}
               placeholder={"Motywy"}
@@ -89,7 +99,7 @@ export default function AnimeSearchForm({
             <Combobox
               options={mediaTypes}
               value={mediaTypes.filter((o) => filters.mediaTypeId == o.id)[0]}
-              onValueChange={(val) => handleOnChange("mediaTypeId", val)}
+              onValueChange={(val) => handleOnChange("mediaTypeId", val?.id)}
               getId={(o) => o.id.toString()}
               getItem={(o) => o.name}
               placeholder={"Rodzaj"}
@@ -98,7 +108,7 @@ export default function AnimeSearchForm({
             <Combobox
               options={studios}
               value={studios.filter((o) => filters.studioId == o.id)[0]}
-              onValueChange={(val) => handleOnChange("studioId", val)}
+              onValueChange={(val) => handleOnChange("studioId", val?.id)}
               getId={(o) => o.id.toString()}
               getItem={(o) => o.name}
               placeholder={"Studio"}
@@ -124,6 +134,7 @@ export default function AnimeSearchForm({
             getItem={function (value: never): React.ReactNode {
               throw new Error("Function not implemented.")
             }}
+            withInput={false}
           />
         </div>
       </div>

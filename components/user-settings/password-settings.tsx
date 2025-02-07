@@ -2,11 +2,12 @@
 
 import { useState } from "react"
 import { UserService } from "@/services/client/user.service"
-import { useAppSelector } from "@/store/root-store"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
+
+import { useAppSelector } from "@/lib/store/root-store"
 
 import { Button } from "../ui/button"
 import {

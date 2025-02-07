@@ -5,37 +5,39 @@ import { Api } from "./api.service"
 
 export class UserService extends Api {
   constructor() {
-    super()
+    super("/users")
   }
 
   async findUsers(username: string) {
-    return await this._get<User[]>("/users", new URLSearchParams({ username }))
+    return await this._get<User[]>("", {
+      params: { username },
+    })
   }
 
   async getCurrentUser() {
-    return await this._get<User>("/users/@me")
+    return await this._get<User>("/@me")
   }
 
   async updateProfilePicture(formData: FormData) {
-    return await this._put("/users/@me/avatar", formData, {
+    return await this._put("/@me/avatar", formData, {
       timeout: 1_000 * 60 * 5,
     })
   }
 
   async updateBanner(formData: FormData) {
-    return await this._put("/users/@me/banner", formData, {
+    return await this._put("/@me/banner", formData, {
       timeout: 1_000 * 60 * 5,
     })
   }
 
   async patchProfile(profile: { displayName: string; description: string }) {
-    return await this._patch("/users/@me", profile, {
+    return await this._patch("/@me", profile, {
       timeout: 10_000,
     })
   }
 
   async changePassword(req: ChangePassword, key: string) {
-    return await this._post("/users/@me/password", {
+    return await this._post("/@me/password", {
       currentPassword: await encrypt(req.currentPassword, key),
       newPassword: await encrypt(req.newPassword, key),
       confirmPassword: await encrypt(req.confirmPassword, key),
@@ -43,7 +45,7 @@ export class UserService extends Api {
   }
 
   async changeEmail(req: ChangeEmail, key: string) {
-    return await this._post("/users/@me/email", {
+    return await this._post("/@me/email", {
       password: await encrypt(req.password, key),
       email: req.email,
     } satisfies ChangeEmail)

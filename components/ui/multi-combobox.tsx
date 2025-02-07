@@ -134,7 +134,7 @@ export function MultiComboboxCommand<T>({
 
 interface MultiComboboxProps<T> extends MultiComboboxCommandProps<T> {
   disabled?: boolean
-  className?: React.ComponentProps<"div">["className"]
+  className?: string
 }
 
 export default function MultiCombobox<T>({

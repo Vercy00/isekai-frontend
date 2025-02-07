@@ -1,16 +1,15 @@
-import { cache } from "react"
-import axios, { AxiosInstance } from "axios"
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios"
 
 import "server-only"
 
 const ISODateFormat =
   /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d*)?(?:[-+]\d{2}:?\d{2}|Z)?$/
 
-export class ServerApi {
-  clientId = process.env.CLIENT_ID as string
-  clientSecret = process.env.CLIENT_SECRET as string
-  authUrl = "https://sso.isekai.pl/realms/isekai/protocol/openid-connect/token"
-  baseUrl = "http://localhost:8080/v1" //"https://api.isekai.pl/v1"
+class ServerApi {
+  clientId = process.env.CLIENT_ID!
+  clientSecret = process.env.CLIENT_SECRET!
+  authUrl = process.env.AUTH_TOKEN_URL!
+  baseUrl = process.env.NEXT_PUBLIC_BASE_URL!
   token = { expiresIn: new Date(), accessToken: "" }
   instance: AxiosInstance
 
@@ -50,24 +49,32 @@ export class ServerApi {
         Accept: "application/json",
       },
       withCredentials: true,
-      transformResponse: (data) =>
+      transformResponse: (data: string) =>
         data &&
+        !data.startsWith("<html>") &&
         JSON.parse(data, (_, value) =>
           ISODateFormat.test(value) ? new Date(value) : value
         ),
+      paramsSerializer: {
+        indexes: null,
+      },
     })
 
     this.instance.interceptors.request.use(
       async (config) => {
+        if (config.headers.Authorization) return config
+
         config.headers.Authorization = `Bearer ${await this._getToken()}`
+
         return config
       },
       (error) => Promise.reject(error)
     )
   }
 
-  _get = cache(async <T>(url = "", params: URLSearchParams | string = "") => {
-    return (await this.instance.get<T>(this.baseUrl + url, { params: params }))
-      .data
-  })
+  async _get<T>(url: string, config?: AxiosRequestConfig<any>) {
+    return (await this.instance.get<T>(url, config)).data
+  }
 }
+
+export { ServerApi }

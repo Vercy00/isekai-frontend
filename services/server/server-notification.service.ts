@@ -1,25 +1,26 @@
-import { cookies, type UnsafeUnwrappedCookies } from "next/headers"
-import axios from "axios"
+import { cookies } from "next/headers"
 
 import { Notification } from "@/types/notification"
 
-export class ServerNotificationService {
+import { ServerApi } from "./server-api.service"
+
+class ServerNotificationService extends ServerApi {
   async getNotifications() {
-    const cookie = cookies() as unknown as UnsafeUnwrappedCookies
+    const cookie = await cookies()
 
     try {
-      return (
-        await axios.get<Notification[]>(
-          "https://api.isekai.pl/v1/notifications",
-          {
-            headers: {
-              Cookie: cookie.toString(),
-            },
-          }
-        )
-      ).data
+      return await this._get<Notification[]>(
+        "https://api.isekai.pl/v1/notifications",
+        {
+          headers: {
+            Cookie: cookie.toString(),
+          },
+        }
+      )
     } catch (e) {
       return []
     }
   }
 }
+
+export { ServerNotificationService }

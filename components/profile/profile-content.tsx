@@ -2,7 +2,7 @@
 
 import { cloneElement, ReactElement, ReactNode } from "react"
 import Image from "next/image"
-import { ANIME_LIST_STATUS } from "@/const/animeListStatus"
+import { ANIME_LIST_STATUS } from "@/constants/anime-list-status"
 import { TRANSLATION } from "@/translations/pl-pl"
 import { BadgeCheck } from "lucide-react"
 
@@ -36,7 +36,7 @@ export function ProfileContent({
             className="rounded-sm object-cover px-6"
           />
 
-          <div className="absolute left-0 top-1/2 box-content h-full w-full -translate-y-1/2 py-10 backdrop-blur-lg" />
+          <div className="absolute top-1/2 left-0 box-content h-full w-full -translate-y-1/2 py-10 backdrop-blur-lg" />
         </div>
         <div className="relative mx-6 my-8 h-full">
           <Image
@@ -46,15 +46,15 @@ export function ProfileContent({
             className="rounded-sm object-cover"
           />
 
-          <div className="absolute bottom-12 left-12 flex h-20 items-center rounded-sm bg-background/50">
-            <div className="relative aspect-square h-full rounded-sm outline outline-4 outline-primary">
+          <div className="bg-background/50 absolute bottom-12 left-12 flex h-20 items-center rounded-sm">
+            <div className="outline-primary relative aspect-square h-full rounded-sm outline-4">
               <Image
                 src={user.avatarUrl}
                 alt=""
                 fill
                 className="rounded-sm object-cover"
               />
-              <div className="absolute bottom-0 right-0 h-6 w-6 translate-x-1/2 translate-y-1/2 rounded-full border-4 border-primary bg-green-600" />
+              <div className="border-primary absolute right-0 bottom-0 h-6 w-6 translate-x-1/2 translate-y-1/2 rounded-full border-4 bg-green-600" />
             </div>
 
             <div className="px-8">

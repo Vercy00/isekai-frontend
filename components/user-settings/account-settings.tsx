@@ -2,13 +2,14 @@
 
 import Image from "next/image"
 import { UserService } from "@/services/client/user.service"
-import { useAppDispatch, useAppSelector } from "@/store/root-store"
-import { userActions } from "@/store/user-slice"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { AxiosError } from "axios"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
+
+import { useAppDispatch, useAppSelector } from "@/lib/store/root-store"
+import { userActions } from "@/lib/store/user-slice"
 
 import { Button } from "../ui/button"
 import {
@@ -142,7 +143,7 @@ export function AccountSettings() {
             name="banner"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="relative block aspect-[4/1] w-full cursor-pointer overflow-hidden rounded-sm after:absolute after:left-0 after:top-0 after:flex after:h-full after:w-full after:items-center after:justify-center after:bg-background/60 after:opacity-0 after:transition-opacity after:content-['Zmień_baner'] hover:after:opacity-100">
+                <FormLabel className="after:bg-background/60 relative block aspect-[4/1] w-full cursor-pointer overflow-hidden rounded-sm after:absolute after:top-0 after:left-0 after:flex after:h-full after:w-full after:items-center after:justify-center after:opacity-0 after:transition-opacity after:content-['Zmień_baner'] hover:after:opacity-100">
                   <Image
                     src={
                       !!field.value
@@ -177,7 +178,7 @@ export function AccountSettings() {
             name="avatar"
             render={({ field }) => (
               <FormItem className="-mt-20 ml-4">
-                <FormLabel className="relative block aspect-square w-24 cursor-pointer overflow-hidden rounded-sm after:absolute after:left-0 after:top-0 after:flex after:h-full after:w-full after:items-center after:justify-center after:bg-background/60 after:text-center after:opacity-0 after:transition-opacity after:content-['Zmień_avatar'] hover:after:opacity-100">
+                <FormLabel className="after:bg-background/60 relative block aspect-square w-24 cursor-pointer overflow-hidden rounded-sm after:absolute after:top-0 after:left-0 after:flex after:h-full after:w-full after:items-center after:justify-center after:text-center after:opacity-0 after:transition-opacity after:content-['Zmień_avatar'] hover:after:opacity-100">
                   <Image
                     src={
                       !!field.value

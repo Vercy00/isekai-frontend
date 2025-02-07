@@ -2,12 +2,12 @@
 
 import { ReactNode } from "react"
 import Image from "next/image"
-import { FANSUB } from "@/const/fansub"
-import { useAppSelector } from "@/store/root-store"
+import { FANSUB } from "@/constants/fansub"
 import { TRANSLATION } from "@/translations/pl-pl"
 import { BadgeCheck } from "lucide-react"
 
 import { Group, GroupStats } from "@/types/fansub"
+import { useAppSelector } from "@/lib/store/root-store"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 
@@ -32,7 +32,7 @@ export function GroupsContent({ group, children }: GroupsContentProps) {
             className="rounded-sm object-cover px-6"
           />
 
-          <div className="absolute left-0 top-1/2 box-content h-full w-full -translate-y-1/2 py-10 backdrop-blur-lg" />
+          <div className="absolute top-1/2 left-0 box-content h-full w-full -translate-y-1/2 py-10 backdrop-blur-lg" />
         </div>
         <div className="relative mx-6 my-8 h-full">
           <Image
@@ -50,8 +50,8 @@ export function GroupsContent({ group, children }: GroupsContentProps) {
               )
           ) && <GroupSettings group={group} />}
 
-          <div className="absolute bottom-12 left-12 flex h-20 items-center rounded-sm bg-background/50">
-            <div className="relative aspect-square h-full rounded-sm outline outline-4 outline-primary">
+          <div className="bg-background/50 absolute bottom-12 left-12 flex h-20 items-center rounded-sm">
+            <div className="outline-primary relative aspect-square h-full rounded-sm outline-4">
               <Image
                 src={group.avatarUrl}
                 alt=""
@@ -80,7 +80,7 @@ export function GroupsContent({ group, children }: GroupsContentProps) {
 
           <div>
             <h2 className="mx-2 mb-1">O grupie</h2>
-            <p className="whitespace-pre-wrap rounded-lg border p-4 text-sm">
+            <p className="rounded-lg border p-4 text-sm whitespace-pre-wrap">
               {group.description || "Brak opisu"}
             </p>
           </div>

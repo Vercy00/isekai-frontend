@@ -12,14 +12,13 @@ import { Api } from "./api.service"
 
 export class FansubService extends Api {
   constructor() {
-    super("/api/v1/fansub")
+    super("/fansub")
   }
 
   async searchGroups(groupName: string) {
-    return await this._get<ItemPage<GroupNode>>(
-      "/groups",
-      new URLSearchParams({ groupName })
-    )
+    return await this._get<ItemPage<GroupNode>>("/groups", {
+      params: { groupName },
+    })
   }
 
   async getGroup(groupName: string) {
@@ -67,10 +66,9 @@ export class FansubService extends Api {
   }
 
   async getTranslations(groupName: string, status: string = "") {
-    return await this._get<Translation[]>(
-      `/groups/${groupName}/translations`,
-      new URLSearchParams({ status })
-    )
+    return await this._get<Translation[]>(`/groups/${groupName}/translations`, {
+      params: { status },
+    })
   }
 
   async addTranslation(groupName: string, animeId: number) {
@@ -86,9 +84,11 @@ export class FansubService extends Api {
   async getSubtitles(groupName: string, animeId: number) {
     return await this._get<Subtitle[]>(
       `/groups/${groupName}/translations/${animeId}/subtitles`,
-      new URLSearchParams({
-        size: "1000",
-      })
+      {
+        params: {
+          size: "1000",
+        },
+      }
     )
   }
 
@@ -177,17 +177,15 @@ export class FansubService extends Api {
   }
 
   async getTranslationsToAnime(animeId: number) {
-    return await this._get<ItemPage<Translation>>(
-      "/translations",
-      new URLSearchParams({ animeId: animeId.toString() })
-    )
+    return await this._get<ItemPage<Translation>>("/translations", {
+      params: { animeId },
+    })
   }
 
   async getLastTranslations() {
-    return await this._get<ItemPage<Translation>>(
-      "/translations",
-      new URLSearchParams({ size: "20" })
-    )
+    return await this._get<ItemPage<Translation>>("/translations", {
+      params: { size: "20" },
+    })
   }
 
   async addSubtitle(
@@ -225,14 +223,13 @@ export class FansubService extends Api {
     animeId: number,
     episodeNumList: number[]
   ) {
-    return await this._get<Subtitle[]>(
-      "/subtitles",
-      new URLSearchParams({
+    return await this._get<Subtitle[]>("/subtitles", {
+      params: {
         groupName,
-        animeId: animeId.toString(),
-        episodeNumList: episodeNumList.join(","),
-      })
-    )
+        animeId,
+        episodeNumList,
+      },
+    })
   }
 
   async inviteMember(groupName: string, userId: string) {

@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { FANSUB } from "@/const/fansub"
+import { FANSUB } from "@/constants/fansub"
 import { FansubService } from "@/services/client/fansub.service"
 import { TRANSLATION } from "@/translations/pl-pl"
 import { Row, Table } from "@tanstack/react-table"
@@ -88,7 +88,7 @@ export function AuthorsTableRowActions({
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+          className="data-[state=open]:bg-muted flex h-8 w-8 p-0"
         >
           <Ellipsis className="h-4 w-4" />
           <span className="sr-only">Open menu</span>

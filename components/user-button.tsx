@@ -3,10 +3,11 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { useAppSelector } from "@/store/root-store"
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden"
+import { signIn, signOut } from "next-auth/react"
 
 import { useNotification } from "@/lib/notification-lib"
+import { useAppSelector } from "@/lib/store/root-store"
 import { cn } from "@/lib/utils"
 
 import { Notifications } from "./layout/notifications"
@@ -58,7 +59,7 @@ export function UserButton() {
             </div>
             <span className="ml-10">{user.displayName}</span>
             {notifications.length > 0 && (
-              <div className="absolute right-0 top-0 size-3 -translate-y-1/3 translate-x-1/3 rounded-full bg-red-600" />
+              <div className="absolute top-0 right-0 size-3 -translate-y-1/3 translate-x-1/3 rounded-full bg-red-600" />
             )}
           </Button>
         </SheetTrigger>
@@ -101,7 +102,7 @@ export function UserButton() {
                   <RadioGroup
                     defaultValue="option-one"
                     disabled
-                    className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground"
+                    className="bg-muted text-muted-foreground inline-flex h-10 items-center justify-center rounded-md p-1"
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem
@@ -134,22 +135,24 @@ export function UserButton() {
 
           <div className="grid gap-3">
             <UserSettings />
-            <form method="post" action="https://api.isekai.pl/logout">
-              <Button className="w-full" variant="destructive">
-                Wyloguj
-              </Button>
-            </form>
+            <Button
+              className="w-full"
+              variant="destructive"
+              onClick={() => signOut()}
+            >
+              Wyloguj
+            </Button>
           </div>
         </SheetContent>
       </Sheet>
     )
 
   return (
-    <Link
-      className={buttonVariants({ variant: "secondary" })}
-      href={"https://api.isekai.pl/oauth2/authorization/isekai-gateway"}
+    <Button
+      variant="secondary"
+      onClick={() => signIn("keycloak", { callbackUrl: "/auth" })}
     >
       Zaloguj się
-    </Link>
+    </Button>
   )
 }

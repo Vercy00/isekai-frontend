@@ -44,7 +44,7 @@ export function AnimeSearch({ animeDefaultList, ...props }: AnimeSearchProps) {
 
     animeService
       .searchAnimeList(
-        { ...debouncedFilters, page: lastPage.pageable.pageNumber + 1 },
+        { ...debouncedFilters, page: lastPage.page.number + 1 },
         {
           cancelToken: cancelTokenRef.current.token,
         }
@@ -61,7 +61,7 @@ export function AnimeSearch({ animeDefaultList, ...props }: AnimeSearchProps) {
       <InfiniteScroll
         dataLength={animeList.length}
         next={loadNextPage}
-        hasMore={!lastPage.last}
+        hasMore={lastPage.page.number !== lastPage.page.totalPages - 1}
         loader={
           <h4 className="absolute bottom-0 left-1/2 -translate-x-1/2">
             Wczytywanie...

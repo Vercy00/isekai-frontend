@@ -10,7 +10,9 @@ export class CacheService extends Api {
   }
 
   async getItem(_key: any) {
-    return await this._get("/cache", new URLSearchParams({ store: _key }))
+    return await this._get("/cache", {
+      params: new URLSearchParams({ store: _key }),
+    })
   }
 
   async removeItem(_key: any) {

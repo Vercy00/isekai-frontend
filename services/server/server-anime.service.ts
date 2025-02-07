@@ -1,5 +1,4 @@
-import { cookies } from "next/headers"
-import axios from "axios"
+import { getServerSession } from "next-auth"
 
 import {
   Anime,
@@ -10,18 +9,17 @@ import {
   UserList,
   UserListStatus,
 } from "@/types/anime"
-import { ItemPage } from "@/types/page"
+import { ItemPage, ItemPageFilters } from "@/types/page"
 import { UserStats } from "@/types/user"
+import { authOptions } from "@/app/auth/[...nextauth]/route"
 
 import { ServerApi } from "./server-api.service"
 
-export class ServerAnimeService extends ServerApi {
-  constructor() {
-    super()
-  }
-
+class ServerAnimeService extends ServerApi {
   async getAnimeList(params: URLSearchParams | string = "") {
-    return await this._get<ItemPage<Anime>>("/anime", params)
+    return await this._get<ItemPage<Anime>>("/anime", {
+      params,
+    })
   }
 
   async getMediaTypes() {
@@ -40,50 +38,42 @@ export class ServerAnimeService extends ServerApi {
     return await this._get<Anime>(`/anime/${animeId}?show=${show}`)
   }
 
-  async getEpisodes(animeId: number, params?: any) {
-    return await this._get<ItemPage<Episode>>(
-      `/anime/${animeId}/episodes`,
-      new URLSearchParams({ ...params })
-    )
+  async getEpisodes(animeId: number, filters?: ItemPageFilters<Episode>) {
+    return await this._get<ItemPage<Episode>>(`/anime/${animeId}/episodes`, {
+      params: filters,
+    })
   }
 
   async getUserList(animeId: number) {
-    const cookieStore = await cookies()
+    const token = (await getServerSession(authOptions))?.accessToken
 
-    return (
-      await axios.get<UserList>(
-        `${this.baseUrl}/anime/${animeId}/myListStatus`,
-        {
-          headers: {
-            Cookie: cookieStore.toString(),
-          },
-        }
-      )
-    ).data
+    return await this._get<UserList>(`/anime/${animeId}/myListStatus`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
   }
 
   async getUserStats(userId: string) {
-    return await this._get<UserStats>(
-      `/animeListStatus/stats`,
-      new URLSearchParams({
+    return await this._get<UserStats>(`/animeListStatus/stats`, {
+      params: {
         userId,
-      })
-    )
+      },
+    })
   }
 
   async getUserListStatus(userId: string, type: UserListStatus | null = null) {
-    return await this._get<UserList[]>(
-      `/animeListStatus`,
-      new URLSearchParams(
-        type
-          ? {
-              userId,
-              type,
-            }
-          : {
-              userId,
-            }
-      )
-    )
+    return await this._get<UserList[]>(`/animeListStatus`, {
+      params: type
+        ? {
+            userId,
+            type,
+          }
+        : {
+            userId,
+          },
+    })
   }
 }
+
+export { ServerAnimeService }

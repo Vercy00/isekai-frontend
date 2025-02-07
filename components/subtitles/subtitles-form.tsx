@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react"
 import { FansubService } from "@/services/client/fansub.service"
-import { useAppSelector } from "@/store/root-store"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Settings } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -10,6 +9,7 @@ import { toast } from "sonner"
 import { z } from "zod"
 
 import { Subtitle, Translation } from "@/types/fansub"
+import { useAppSelector } from "@/lib/store/root-store"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import {

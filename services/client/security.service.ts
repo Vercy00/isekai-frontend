@@ -6,8 +6,6 @@ export class SecurityService extends Api {
   }
 
   async login(login: string, password: string) {
-    console.log(login, password)
-
     return await this._post("/login", {
       login,
       password,

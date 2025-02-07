@@ -3,11 +3,12 @@ import { AxiosRequestConfig } from "axios"
 import {
   Anime,
   AnimeFilters,
+  Episode,
   UserList,
   UserListReq,
   UserListStatus,
 } from "@/types/anime"
-import { ItemPage } from "@/types/page"
+import { ItemPage, ItemPageFilters } from "@/types/page"
 import { UserStats } from "@/types/user"
 
 import { Api } from "./api.service"
@@ -21,17 +22,10 @@ export class AnimeService extends Api {
     filters: Partial<AnimeFilters>,
     options?: AxiosRequestConfig<any> | undefined
   ) {
-    const params = Object.entries(filters).map(([key, val]) => {
-      if (key == "tags") return (val as any[])?.flatMap((tag) => [key, tag])
-
-      return [key, val]
+    return await this._get<ItemPage<Anime>>("/anime", {
+      ...options,
+      params: filters,
     })
-
-    return await this._get<ItemPage<Anime>>(
-      "/anime",
-      new URLSearchParams(params as string[][]),
-      options
-    )
   }
 
   async addAnime(anime: any) {
@@ -84,18 +78,21 @@ export class AnimeService extends Api {
   }
 
   async getUserListStatus(userId: string, type: UserListStatus | null = null) {
-    return await this._get<UserList[]>(
-      `/animeListStatus`,
-      new URLSearchParams(
-        type
-          ? {
-              userId,
-              type,
-            }
-          : {
-              userId,
-            }
-      )
-    )
+    return await this._get<UserList[]>(`/animeListStatus`, {
+      params: type
+        ? {
+            userId,
+            type,
+          }
+        : {
+            userId,
+          },
+    })
+  }
+
+  async getEpisodes(animeId: number, filters?: ItemPageFilters<Episode>) {
+    return await this._get<ItemPage<Episode>>(`/anime/${animeId}/episodes`, {
+      params: filters,
+    })
   }
 }
