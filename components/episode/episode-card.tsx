@@ -5,7 +5,7 @@ import { format } from "date-fns"
 import { pl } from "date-fns/locale"
 import { AppWindowIcon, ListPlusIcon, ListXIcon } from "lucide-react"
 
-import { Subtitle } from "@/types/fansub"
+import { Subtitles } from "@/types/fansub"
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -19,7 +19,7 @@ interface EpisodeCardProps {
   animeId: number
   groupName: string
   title: string
-  subtitle: Subtitle | null
+  subtitle?: Subtitles
   episodeNum: number
   selected?: boolean
   anySubtitles?: boolean
@@ -40,7 +40,7 @@ export function EpisodeCard({
     <div
       className={cn(
         "w-full overflow-hidden rounded-lg border",
-        selected ? "outline outline-primary" : ""
+        selected ? "outline-primary outline" : ""
       )}
     >
       <div className="relative grid w-full grid-cols-[1fr_30%]">
@@ -57,12 +57,12 @@ export function EpisodeCard({
             className="object-cover"
           />
           {subtitle && (
-            <div className="absolute flex h-full w-full justify-end gap-3 p-4">
+            <div className="absolute flex h-full w-full items-center justify-end gap-3 p-4">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      className="h-max p-0"
+                      className="h-full p-0"
                       variant="ghost"
                       onClick={() => onClick(episodeNum)}
                     >
@@ -70,7 +70,11 @@ export function EpisodeCard({
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <div>Dodaj do listy pobieranych napisów</div>
+                    <div>
+                      {selected
+                        ? "Usuń z listy pobieranych napisów"
+                        : "Dodaj do listy pobieranych napisów"}
+                    </div>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -82,7 +86,7 @@ export function EpisodeCard({
                       href={`isekai://watch?animeId=${animeId}&episodeNum=${episodeNum}&groupName=${groupName}`}
                       className={cn(
                         buttonVariants({ variant: "ghost" }),
-                        "h-max p-0"
+                        "h-full p-0"
                       )}
                     >
                       <AppWindowIcon />
@@ -98,7 +102,7 @@ export function EpisodeCard({
         </div>
       </div>
       <div className="grid grid-cols-[1fr_30%] border-t">
-        <p className="w-full whitespace-pre-wrap border-r p-4 text-left">
+        <p className="w-full border-r p-4 text-left whitespace-pre-wrap">
           {subtitle
             ? subtitle.description
             : anySubtitles

@@ -53,8 +53,6 @@ export default async function RootLayout({ children }: RootLayoutProps) {
     }
   }
 
-  // console.log(session)
-
   return (
     <html lang={lang} dir={dir(lang)} className="dark">
       <head />

@@ -9,7 +9,7 @@ import { TRANSLATION } from "@/translations/pl-pl"
 import { Dot, Ellipsis, Share2 } from "lucide-react"
 
 import { Anime, Episode } from "@/types/anime"
-import { Subtitle, Translation } from "@/types/fansub"
+import { Subtitles, Translation } from "@/types/fansub"
 import { ItemPage } from "@/types/page"
 import { useUser } from "@/hooks/store"
 import { useMediaQuery } from "@/hooks/use-media-query"
@@ -62,7 +62,7 @@ export function AnimeDetailsContent({
   translations,
 }: AnimeDetailsContentProps) {
   const [selectedEpisodes, setSelectedEpisodes] = React.useState<number[]>([])
-  const [subtitles, setSubtitles] = useState<Subtitle[]>([])
+  const [subtitles, setSubtitles] = useState<Subtitles[]>([])
   const [groupName, setGroupName] = useState("")
   const [sort, setSort] = useState("asc")
 
@@ -97,7 +97,7 @@ export function AnimeDetailsContent({
 
     fansubService
       .getSubtitles(groupName, anime.id!)
-      .then(({ data }) => setSubtitles(data))
+      .then(({ data }) => setSubtitles(data.content))
   }, [groupName])
 
   // if (!isDesktop || viewport === "mobile")
@@ -105,7 +105,7 @@ export function AnimeDetailsContent({
 
   return (
     <div className="relative w-full">
-      <div className="absolute top-0 aspect-[4/1] max-h-[45vh] min-h-[20vh] w-full overflow-hidden">
+      <div className="absolute top-0 aspect-[4/1] max-h-[45lvh] min-h-[20lvh] w-full overflow-hidden">
         <Image
           src={anime.bannerUrl}
           alt=""
@@ -155,7 +155,7 @@ export function AnimeDetailsContent({
 
         <div className="w-full">
           <div className="w-1 overflow-hidden">
-            <div className="relative top-0 -z-10 aspect-[4/1] max-h-[45vh] min-h-[20vh] w-[100vw] overflow-hidden" />
+            <div className="relative top-0 -z-10 aspect-[4/1] max-h-[45lvh] min-h-[20lvh] w-[100vw] overflow-hidden" />
           </div>
 
           <div className="mt-4 flex flex-col gap-4">

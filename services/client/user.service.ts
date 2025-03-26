@@ -8,30 +8,30 @@ export class UserService extends Api {
     super("/users")
   }
 
-  async findUsers(username: string) {
-    return await this._get<User[]>("", {
+  findUsers(username: string) {
+    return this._get<User[]>("", {
       params: { username },
     })
   }
 
-  async getCurrentUser() {
-    return await this._get<User>("/@me")
+  getCurrentUser() {
+    return this._get<User>("/@me")
   }
 
-  async updateProfilePicture(formData: FormData) {
-    return await this._put("/@me/avatar", formData, {
+  updateProfilePicture(formData: FormData) {
+    return this._put("/@me/avatar", formData, {
       timeout: 1_000 * 60 * 5,
     })
   }
 
-  async updateBanner(formData: FormData) {
-    return await this._put("/@me/banner", formData, {
+  updateBanner(formData: FormData) {
+    return this._put("/@me/banner", formData, {
       timeout: 1_000 * 60 * 5,
     })
   }
 
-  async patchProfile(profile: { displayName: string; description: string }) {
-    return await this._patch("/@me", profile, {
+  patchProfile(profile: { displayName: string; description: string }) {
+    return this._patch("/@me", profile, {
       timeout: 10_000,
     })
   }

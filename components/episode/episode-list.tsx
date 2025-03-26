@@ -1,18 +1,20 @@
 import {
   ActionDispatch,
+  ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useReducer,
   useState,
 } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
 import { useAnime, useEpisodes, useTranslations } from "@/contexts/local/anime"
+import { CircularProgress } from "@mui/material"
 import { useDebounce } from "@uidotdev/usehooks"
 import { Share2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { Episode } from "@/types/anime"
-import { Subtitle } from "@/types/fansub"
 import { ItemPage, SortDirection } from "@/types/page"
 import { useUser } from "@/hooks/store"
 
@@ -86,7 +88,6 @@ function EpisodeList() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const [selectedEpisodes, setSelectedEpisodes] = useState<number[]>([])
-  const [subtitles, setSubtitles] = useState<Subtitle[]>([])
   const [groupName, setGroupName] = useState("")
   const [filters, filtersDispatch] = useReducer(filtersReducer, {
     sortDir: (searchParams.get("episodeSortDir") || "ASC") as SortDirection,
@@ -94,20 +95,23 @@ function EpisodeList() {
   })
   const debouncedFilters = useDebounce(filters, 200)
   const translations = useTranslations()
-  const { episodes, loadEpisodes } = useEpisodes()
+  const { episodes, loadEpisodes, loading, subtitles } = useEpisodes()
   const { t } = useTranslation()
   const anime = useAnime()
   const user = useUser()
 
-  const switchEpisode = useCallback((episodeNum: number) => {
-    if (selectedEpisodes.includes(episodeNum)) {
-      setSelectedEpisodes((episodes) =>
-        episodes.filter((ep) => ep != episodeNum)
-      )
-    } else {
-      setSelectedEpisodes((episodes) => [...episodes, episodeNum])
-    }
-  }, [])
+  const switchEpisode = useCallback(
+    (episodeNum: number) => {
+      if (selectedEpisodes.includes(episodeNum)) {
+        setSelectedEpisodes((episodes) =>
+          episodes.filter((ep) => ep != episodeNum)
+        )
+      } else {
+        setSelectedEpisodes((episodes) => [...episodes, episodeNum])
+      }
+    },
+    [selectedEpisodes]
+  )
 
   const generateGroupUrl = useCallback(() => {
     const url = new URL(window.location.href)
@@ -129,8 +133,10 @@ function EpisodeList() {
 
   useEffect(() => {
     if (
-      debouncedFilters.sortDir === "ASC" &&
-      episodes.page.number === debouncedFilters.page
+      (searchParams.get("episodeSortDir") || "ASC") ===
+        debouncedFilters.sortDir &&
+      (searchParams.get("episodePage") || "0") ===
+        debouncedFilters.page.toString()
     ) {
       return
     }
@@ -141,7 +147,8 @@ function EpisodeList() {
       createQueryString([
         { name: "episodeSortDir", value: debouncedFilters.sortDir },
         { name: "episodePage", value: debouncedFilters.page.toString() },
-      ])
+      ]) +
+      "#episodes"
 
     window.history.pushState(null, "", url)
 
@@ -152,8 +159,21 @@ function EpisodeList() {
     })
   }, [debouncedFilters])
 
+  useEffect(() => {
+    if (!groupName) return
+
+    loadEpisodes(
+      {
+        page: debouncedFilters.page,
+        size: 12,
+        sort: [`episodeNum,${debouncedFilters.sortDir}`],
+      },
+      groupName
+    )
+  }, [groupName])
+
   return (
-    <div id="episodes" className="grid w-full gap-4">
+    <div id="episodes" className="relative grid w-full gap-4">
       <div className="flex justify-between">
         <div className="flex gap-2">
           <Select onValueChange={setGroupName} value={groupName}>
@@ -291,11 +311,9 @@ function EpisodeList() {
         {episodes.content.map((episode, i) => (
           <EpisodeCard
             key={i}
-            subtitle={
-              subtitles.filter(
-                (subtitle) => subtitle.episodeNum === episode.episodeNum
-              )[0]
-            }
+            subtitle={subtitles.find(
+              (subtitle) => subtitle.episodeNum === episode.episodeNum
+            )}
             onClick={switchEpisode}
             anySubtitles={groupName == "" && translations.length > 0}
             selected={selectedEpisodes.includes(episode.episodeNum)}
@@ -310,6 +328,12 @@ function EpisodeList() {
         episodes={episodes}
         filtersDispatch={filtersDispatch}
       />
+
+      {loading && (
+        <div className="absolute -top-1 -left-1 flex h-[calc(100%+8px)] w-[calc(100%+8px)] items-center justify-center rounded-lg bg-black/80">
+          <CircularProgress />
+        </div>
+      )}
     </div>
   )
 }
@@ -323,6 +347,87 @@ function EpisodePagination({
   episodes,
   filtersDispatch,
 }: EpisodePaginationProps) {
+  const pages = useMemo(() => {
+    const set = new Set<number>()
+
+    set.add(0)
+    set.add(episodes.page.totalPages - 1)
+
+    for (let i = -1; i < Math.min(episodes.page.totalPages, 2); i++) {
+      set.add(
+        Math.max(
+          Math.min(episodes.page.number + i, episodes.page.totalPages - 1),
+          0
+        )
+      )
+    }
+
+    return [...set].sort((a, b) => a - b)
+  }, [episodes])
+
+  return (
+    <Pagination>
+      <PaginationContent>
+        {episodes.page.number > 0 && (
+          <PaginationItem>
+            <PaginationPrevious
+              href="#episodes"
+              onClick={() =>
+                filtersDispatch({
+                  type: FiltersActionKind.PAGE,
+                  payload: episodes.page.number - 1,
+                })
+              }
+            />
+          </PaginationItem>
+        )}
+
+        {pages.reduce<ReactNode[]>((acc, curr, i) => {
+          acc.push(
+            <PaginationItem key={curr}>
+              <PaginationLink
+                href="#episodes"
+                isActive={curr === episodes.page.number}
+                onClick={() =>
+                  filtersDispatch({
+                    type: FiltersActionKind.PAGE,
+                    payload: curr,
+                  })
+                }
+              >
+                {curr + 1}
+              </PaginationLink>
+            </PaginationItem>
+          )
+
+          if (Math.abs(pages[i] - pages[i + 1]) > 1) {
+            acc.push(
+              <PaginationItem key={curr + 99999}>
+                <PaginationEllipsis />
+              </PaginationItem>
+            )
+          }
+
+          return acc
+        }, [])}
+
+        {episodes.page.number + 1 < episodes.page.totalPages && (
+          <PaginationItem>
+            <PaginationNext
+              href="#episodes"
+              onClick={() =>
+                filtersDispatch({
+                  type: FiltersActionKind.PAGE,
+                  payload: episodes.page.number + 1,
+                })
+              }
+            />
+          </PaginationItem>
+        )}
+      </PaginationContent>
+    </Pagination>
+  )
+
   // TODO: SET
   return (
     <Pagination>

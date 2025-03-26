@@ -5,17 +5,17 @@ export class CacheService extends Api {
     super()
   }
 
-  async setItem(_key: any, value: any) {
-    return await this._post(`/cache?store=${_key}`, value)
+  setItem(_key: any, value: any) {
+    return this._post(`/cache?store=${_key}`, value)
   }
 
-  async getItem(_key: any) {
-    return await this._get("/cache", {
+  getItem(_key: any) {
+    return this._get("/cache", {
       params: new URLSearchParams({ store: _key }),
     })
   }
 
-  async removeItem(_key: any) {
-    return await this._delete(`/cache?store=${_key}`)
+  removeItem(_key: any) {
+    return this._delete(`/cache?store=${_key}`)
   }
 }

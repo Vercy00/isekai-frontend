@@ -50,23 +50,23 @@ export class Api {
     // )
   }
 
-  async _get<T>(url: string, options?: AxiosRequestConfig<any> | undefined) {
-    return await this.instance.get<T>(`${url}`, { ...options })
+  _get<T>(url: string, options?: AxiosRequestConfig<any> | undefined) {
+    return this.instance.get<T>(`${url}`, { ...options })
   }
 
-  async _post<T>(url: string, body?: any, config?: AxiosRequestConfig<any>) {
-    return await this.instance.post<T>(url, body, config)
+  _post<T>(url: string, body?: any, config?: AxiosRequestConfig<any>) {
+    return this.instance.post<T>(url, body, config)
   }
 
-  async _delete(url: string, config?: AxiosRequestConfig<any>) {
-    return await this.instance.delete(url, config)
+  _delete(url: string, config?: AxiosRequestConfig<any>) {
+    return this.instance.delete(url, config)
   }
 
-  async _patch<T>(url: string, body?: any, config?: AxiosRequestConfig<any>) {
-    return await this.instance.patch<T>(url, body, config)
+  _patch<T>(url: string, body?: any, config?: AxiosRequestConfig<any>) {
+    return this.instance.patch<T>(url, body, config)
   }
 
-  async _put<T>(url: string, body?: any, config?: AxiosRequestConfig<any>) {
-    return await this.instance.put<T>(url, body, config)
+  _put<T>(url: string, body?: any, config?: AxiosRequestConfig<any>) {
+    return this.instance.put<T>(url, body, config)
   }
 }

@@ -1,7 +1,7 @@
 import { Anime } from "./anime"
 import { User } from "./user"
 
-export type Subtitle = {
+export type Subtitles = {
   description: string
   magnet: string
   episodeNum: number

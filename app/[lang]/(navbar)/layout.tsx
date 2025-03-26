@@ -27,8 +27,8 @@ export default async function NavbarLayout({ children }: NavbarLayoutProps) {
   return (
     <NotificationProvider initNotifications={notifications}>
       <div className="flex min-h-screen flex-col">
-        <div className="z-30 w-full bg-background backdrop-blur-md">
-          <header className="container z-40 max-w-full px-6">
+        <div className="bg-background z-30 w-full backdrop-blur-md">
+          <header className="z-40 container max-w-full px-6">
             <div className="flex h-20 items-center justify-between py-6">
               <MainNav items={mainConfig.mainNav} />
               <div>

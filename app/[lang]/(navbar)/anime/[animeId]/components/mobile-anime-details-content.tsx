@@ -31,7 +31,7 @@ interface AnimeDetailsContentProps {
 export function MobileAnimeDetailsContent({ anime }: AnimeDetailsContentProps) {
   return (
     <div>
-      <div className="relative aspect-[4/1] max-h-[45vh] min-h-[25vh] w-full overflow-hidden">
+      <div className="relative aspect-[4/1] max-h-[45lvh] min-h-[25lvh] w-full overflow-hidden">
         <Image
           src={`http://localhost:3000/api/v1/anime/${anime.id}/banner`}
           alt=""

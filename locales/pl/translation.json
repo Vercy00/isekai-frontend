@@ -1,5 +1,19 @@
 {
   "gg": {
     "wp": "aaa"
+  },
+  "panel": {
+    "user": "Użytkownik",
+    "profile": "Profil",
+    "password": "Hasło",
+    "email": "Email",
+    "anime": "Anime",
+    "request_edit_anime": "Edytowanie",
+    "request_import_anime": "Import",
+    "fansub": "Fansub",
+    "admin": "Admin",
+    "main": "Główne",
+    "page": "Strona",
+    "links": "Odnośniki"
   }
 }

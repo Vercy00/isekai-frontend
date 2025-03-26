@@ -49,12 +49,12 @@ export function GroupSettings({ group }: GroupSettingsProps) {
       <DialogTrigger asChild>
         <Button
           variant="secondary"
-          className="absolute right-3 top-3 aspect-square bg-background/50 p-2 hover:bg-background/80"
+          className="bg-background/50 hover:bg-background/80 absolute top-3 right-3 aspect-square p-2"
         >
           <Settings />
         </Button>
       </DialogTrigger>
-      <DialogContent className="flex h-[min(600px,_100vh)] min-h-[min(600px,_100vh)] w-[min(900px,_100vw)] min-w-[min(900px,_100vw)] flex-col overflow-hidden">
+      <DialogContent className="flex h-[min(600px,_100lvh)] min-h-[min(600px,_100lvh)] w-[min(900px,_100vw)] min-w-[min(900px,_100vw)] flex-col overflow-hidden">
         <DialogHeader>
           <DialogTitle>Ustawienia</DialogTitle>
         </DialogHeader>
@@ -69,7 +69,7 @@ export function GroupSettings({ group }: GroupSettingsProps) {
               <TabsTrigger
                 key={key}
                 value={key}
-                className="w-full justify-start capitalize hover:bg-muted data-[state=active]:bg-muted"
+                className="hover:bg-muted data-[state=active]:bg-muted w-full justify-start capitalize"
               >
                 {value.name}
               </TabsTrigger>

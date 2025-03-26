@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react"
-import { useSubtitlesSocket } from "@/contexts/global/subtitles-subtitles"
 import { Download } from "lucide-react"
 import { toast } from "sonner"
 
@@ -32,7 +31,6 @@ export function SubtitlesDownload({
   groupName,
   animeId,
 }: SubtitlesDownloadProps) {
-  const [simpName, addOnMessage] = useSubtitlesSocket()
   const [downloading, setDownloading] = useState(false)
   const [status, setStatus] = useState<Status | null>()
   const toastId = useRef<string | number>(null)
@@ -117,11 +115,10 @@ export function SubtitlesDownload({
             </DialogHeader>
             <a
               className={buttonVariants({ variant: "default" })}
-              href={`/api/v1/fansub/subtitles?groupName=${groupName}&animeId=${animeId}&simpName=${simpName}&episodesNum=${selectedEpisodes.join(",")}`}
+              href={`${process.env.NEXT_PUBLIC_BASE_URL}/v1/fansub/subtitles?groupName=${groupName}&animeId=${animeId}&episodesNum=${selectedEpisodes.join(",")}`}
               onClick={() => {
                 onClick()
                 setDownloading(true)
-                addOnMessage(setStatus)
               }}
               download
             >

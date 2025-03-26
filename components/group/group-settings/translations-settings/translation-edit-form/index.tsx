@@ -6,7 +6,7 @@ import CircularProgress from "@mui/material/CircularProgress"
 import { RowData } from "@tanstack/react-table"
 import { ChevronLeft } from "lucide-react"
 
-import { Group, Subtitle, Translation } from "@/types/fansub"
+import { Group, Subtitles, Translation } from "@/types/fansub"
 import { AdvancedTable } from "@/components/ui/advanced-table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
@@ -39,7 +39,7 @@ export function TranslationEditForm({
   onClose,
 }: TranslationEditFormProps) {
   const [translation, setTranslation] = useState<Translation | null>(null)
-  const [subtitles, setSubtitles] = useState<Subtitle[] | null>(null)
+  const [subtitles, setSubtitles] = useState<Subtitles[] | null>(null)
 
   useEffect(() => {
     fansubService.getTranslation(group.name, animeId).then(({ data }) => {
@@ -62,7 +62,7 @@ export function TranslationEditForm({
         </h2>
       </div>
       <div className="grid gap-4">
-        <div className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1">
+        <div className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus:ring-ring flex h-10 w-full items-center justify-between rounded-md border px-3 py-2 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1">
           {STATUSES[translation?.status || "PLANNED"]}
         </div>
 
@@ -107,7 +107,7 @@ export function TranslationEditForm({
       </div>
 
       {(!translation || !subtitles) && (
-        <div className="absolute left-0 top-0 flex h-full w-full items-center justify-center bg-black/80">
+        <div className="absolute top-0 left-0 flex h-full w-full items-center justify-center bg-black/80">
           <CircularProgress />
         </div>
       )}

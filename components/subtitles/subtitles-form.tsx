@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
 
-import { Subtitle, Translation } from "@/types/fansub"
+import { Subtitles, Translation } from "@/types/fansub"
 import { useAppSelector } from "@/lib/store/root-store"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -126,7 +126,7 @@ export function SubtitlesForm({
   const [open, setOpen] = useState(false)
   const user = useAppSelector((state) => state.userStore.user)
   const [edit, setEdit] = useState(false)
-  const [subs, setSubs] = useState<Subtitle[]>([])
+  const [subs, setSubs] = useState<Subtitles[]>([])
   const form = useForm<z.infer<typeof AddFormSchema>>({
     resolver: zodResolver(edit ? EditFormSchema : AddFormSchema),
     mode: "onChange",
@@ -141,7 +141,7 @@ export function SubtitlesForm({
   useEffect(() => {
     fansubService
       .getSubtitles(form.getValues().groupName, animeId)
-      .then(({ data }) => setSubs(data))
+      .then(({ data }) => setSubs(data.content))
   }, [form.getValues().groupName, setSubs])
 
   useEffect(() => {

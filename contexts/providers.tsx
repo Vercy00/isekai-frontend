@@ -8,7 +8,6 @@ import { defaultNS } from "@/lib/i18n/settings"
 import { IUserState } from "@/lib/store/user-slice"
 
 import { StoreProvider } from "./global/store/store-provider"
-import { SubtitleSocketProvider } from "./global/subtitles-subtitles"
 import { TranslationsProvider } from "./global/translations/translations-provider"
 
 interface ProvidersProps {
@@ -30,10 +29,8 @@ export function Providers({
       locale={locale}
       resources={resources}
     >
-      <SessionProvider refetchInterval={4 * 60} basePath="/auth">
-        <StoreProvider initUser={initUser}>
-          <SubtitleSocketProvider>{children}</SubtitleSocketProvider>
-        </StoreProvider>
+      <SessionProvider refetchInterval={3 * 60} basePath="/auth">
+        <StoreProvider initUser={initUser}>{children}</StoreProvider>
       </SessionProvider>
     </TranslationsProvider>
   )

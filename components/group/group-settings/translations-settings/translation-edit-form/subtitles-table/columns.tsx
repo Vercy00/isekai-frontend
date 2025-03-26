@@ -2,9 +2,9 @@ import { ColumnDef } from "@tanstack/react-table"
 import { format } from "date-fns"
 import { pl } from "date-fns/locale"
 
-import { Subtitle } from "@/types/fansub"
+import { Subtitles } from "@/types/fansub"
 
-export const columns: ColumnDef<Subtitle>[] = [
+export const columns: ColumnDef<Subtitles>[] = [
   {
     id: "episode",
     size: -1,
@@ -12,7 +12,7 @@ export const columns: ColumnDef<Subtitle>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="line-clamp-2 max-w-[500px] truncate whitespace-normal font-medium">
+          <span className="line-clamp-2 max-w-[500px] truncate font-medium whitespace-normal">
             {row.original.episodeNum}
           </span>
         </div>
@@ -26,7 +26,7 @@ export const columns: ColumnDef<Subtitle>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="line-clamp-2 max-w-[500px] truncate whitespace-normal font-medium">
+          <span className="line-clamp-2 max-w-[500px] truncate font-medium whitespace-normal">
             {row.original.uploadedBy.displayName}
           </span>
         </div>
@@ -40,7 +40,7 @@ export const columns: ColumnDef<Subtitle>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="line-clamp-2 max-w-[500px] truncate whitespace-normal font-medium">
+          <span className="line-clamp-2 max-w-[500px] truncate font-medium whitespace-normal">
             {format(row.original.createdAt, "PPpp", { locale: pl })}
           </span>
         </div>
@@ -54,7 +54,7 @@ export const columns: ColumnDef<Subtitle>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
-          <span className="line-clamp-2 max-w-[500px] truncate whitespace-normal font-medium">
+          <span className="line-clamp-2 max-w-[500px] truncate font-medium whitespace-normal">
             {format(row.original.updatedAt, "PPpp", { locale: pl })}
           </span>
         </div>

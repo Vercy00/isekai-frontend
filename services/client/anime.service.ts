@@ -18,67 +18,64 @@ export class AnimeService extends Api {
     super()
   }
 
-  async searchAnimeList(
+  searchAnimeList(
     filters: Partial<AnimeFilters>,
     options?: AxiosRequestConfig<any> | undefined
   ) {
-    return await this._get<ItemPage<Anime>>("/anime", {
+    return this._get<ItemPage<Anime>>("/anime", {
       ...options,
       params: filters,
     })
   }
 
-  async addAnime(anime: any) {
-    return await this._post("/anime", anime)
+  addAnime(anime: any) {
+    return this._post("/anime", anime)
   }
 
-  async hideAnime(animeId: number, hide: boolean) {
-    return await this._patch(`/anime/${animeId}`, { hide })
+  hideAnime(animeId: number, hide: boolean) {
+    return this._patch(`/anime/${animeId}`, { hide })
   }
 
-  async patchAnime(animeId: number, anime: Partial<Anime>) {
-    return await this._patch(`/anime/${animeId}`, anime)
+  patchAnime(animeId: number, anime: Partial<Anime>) {
+    return this._patch(`/anime/${animeId}`, anime)
   }
 
-  async updateThumbnail(animeId: number, formData: FormData) {
-    return await this._put(`/anime/${animeId}/thumbnail`, formData, {
+  updateThumbnail(animeId: number, formData: FormData) {
+    return this._put(`/anime/${animeId}/thumbnail`, formData, {
       timeout: 10_000,
     })
   }
 
-  async updateBanner(animeId: number, formData: FormData) {
-    return await this._put(`/anime/${animeId}/banner`, formData, {
+  updateBanner(animeId: number, formData: FormData) {
+    return this._put(`/anime/${animeId}/banner`, formData, {
       timeout: 10_000,
     })
   }
 
-  async getUserStatus(animeId: number) {
-    return await this._get<UserList>(`/anime/${animeId}/myListStatus`)
+  getUserStatus(animeId: number) {
+    return this._get<UserList>(`/anime/${animeId}/myListStatus`)
   }
 
-  async patchUserStatus(animeId: number, userList: Partial<UserListReq>) {
-    return await this._patch<UserList>(
-      `/anime/${animeId}/myListStatus`,
-      userList
-    )
+  patchUserStatus(animeId: number, userList: Partial<UserListReq>) {
+    return this._patch<UserList>(`/anime/${animeId}/myListStatus`, userList)
   }
 
-  async addToFavorite(animeId: number, favorite: boolean) {
-    return await this._patch<UserList>(`/anime/${animeId}/myListStatus`, {
+  addToFavorite(animeId: number, favorite: boolean) {
+    return this._patch<UserList>(`/anime/${animeId}/myListStatus`, {
       favorite,
     })
   }
 
-  async deleteUserListStatus(animeId: number) {
-    return await this._delete(`/anime/${animeId}/myListStatus`)
+  deleteUserListStatus(animeId: number) {
+    return this._delete(`/anime/${animeId}/myListStatus`)
   }
 
-  async getUserList(userId: string) {
-    return await this._get<UserStats>(`/animeListStatus/stats`)
+  getUserList(userId: string) {
+    return this._get<UserStats>(`/animeListStatus/stats`)
   }
 
-  async getUserListStatus(userId: string, type: UserListStatus | null = null) {
-    return await this._get<UserList[]>(`/animeListStatus`, {
+  getUserListStatus(userId: string, type: UserListStatus | null = null) {
+    return this._get<UserList[]>(`/animeListStatus`, {
       params: type
         ? {
             userId,
@@ -90,8 +87,13 @@ export class AnimeService extends Api {
     })
   }
 
-  async getEpisodes(animeId: number, filters?: ItemPageFilters<Episode>) {
-    return await this._get<ItemPage<Episode>>(`/anime/${animeId}/episodes`, {
+  getEpisodes(
+    animeId: number,
+    filters?: ItemPageFilters<Episode>,
+    options?: AxiosRequestConfig<Episode>
+  ) {
+    return this._get<ItemPage<Episode>>(`/anime/${animeId}/episodes`, {
+      ...options,
       params: filters,
     })
   }

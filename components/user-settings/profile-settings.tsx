@@ -52,7 +52,7 @@ const FormSchema = z.object({
     .nullable(),
 })
 
-export function AccountSettings() {
+export function ProfileSettings() {
   const dispatch = useAppDispatch()
   const user = useAppSelector((state) => state.userStore.user)!
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -132,7 +132,7 @@ export function AccountSettings() {
   }
 
   return (
-    <div className="flex h-full flex-col gap-3">
+    <div className="flex flex-col gap-3">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -177,8 +177,8 @@ export function AccountSettings() {
             control={form.control}
             name="avatar"
             render={({ field }) => (
-              <FormItem className="-mt-20 ml-4">
-                <FormLabel className="after:bg-background/60 relative block aspect-square w-24 cursor-pointer overflow-hidden rounded-sm after:absolute after:top-0 after:left-0 after:flex after:h-full after:w-full after:items-center after:justify-center after:text-center after:opacity-0 after:transition-opacity after:content-['Zmień_avatar'] hover:after:opacity-100">
+              <FormItem className="-mt-20 ml-10">
+                <FormLabel className="outline-primary after:bg-background/60 relative block aspect-square w-24 cursor-pointer overflow-hidden rounded-sm outline-4 after:absolute after:top-0 after:left-0 after:flex after:h-full after:w-full after:items-center after:justify-center after:text-center after:opacity-0 after:transition-opacity after:content-['Zmień_avatar'] hover:after:opacity-100">
                   <Image
                     src={
                       !!field.value
@@ -232,7 +232,7 @@ export function AccountSettings() {
                 <FormItem>
                   <FormLabel>Opis</FormLabel>
                   <FormControl>
-                    <>
+                    <div>
                       <Textarea
                         {...field}
                         value={field.value ?? ""}
@@ -245,7 +245,7 @@ export function AccountSettings() {
                         }
                       />
                       <div className="text-right text-sm">{count}/1024</div>
-                    </>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

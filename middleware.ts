@@ -1,50 +1,60 @@
-import { NextResponse, userAgent } from "next/server"
+import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { getToken, JWT } from "next-auth/jwt"
 import { i18nRouter } from "next-i18n-router"
 
 import { i18nConfig } from "./i18n-config"
-import { cookieName, fallbackLng, languages } from "./lib/i18n/settings"
-import { ServerUserService } from "./services/server/server-user.service"
+import { languages } from "./lib/i18n/settings"
 
-const userService = new ServerUserService()
-
-// export async function middleware(request: NextRequest) {
-// const { device } = userAgent(request)
-// const viewport = device.type === "mobile" ? "mobile" : "desktop"
-
-// request.nextUrl.searchParams.set("viewport", viewport)
-
-// if (!request.nextUrl.pathname.startsWith("/panel"))
-//   return NextResponse.rewrite(request.nextUrl)
-
-// const user = await userService.getCurrentUser()
-
-// if (
-//   !user?.role ||
-//   !["JR_MOD", "MOD", "JR_ADMIN", "ADMIN", "OWNER"].includes(user.role)
-// )
-//   return NextResponse.redirect(new URL("/", request.url))
-
-// return NextResponse.rewrite(request.nextUrl)
-// }
-
-export const config = {
-  // matcher: '/:lng*'
-  matcher: [
-    "/((?!auth/|api|_next/static|_next/image|assets|favicon.ico|sw.js|site.webmanifest).*)",
-  ],
+enum HttpStatus {
+  OK,
+  UNATHORIZED,
+  FORBIDDEN,
 }
 
-export function middleware(request: NextRequest) {
+function validatePanelAccess(token: JWT | null) {
+  if (!token) {
+    return HttpStatus.UNATHORIZED
+  }
+
+  return HttpStatus.OK
+}
+
+function createResponse(request: NextRequest, status: HttpStatus) {
+  switch (status) {
+    case HttpStatus.UNATHORIZED:
+      return NextResponse.redirect(new URL("/unauthorized", request.url))
+    case HttpStatus.FORBIDDEN:
+      return NextResponse.redirect(new URL("/forbidden", request.url))
+    default:
+      return i18nRouter(request, i18nConfig)
+  }
+}
+
+export async function middleware(request: NextRequest) {
+  const token = await getToken({ req: request })
+  let status = HttpStatus.OK
+
   if (request.nextUrl.pathname === "/auth") {
     return NextResponse.redirect(new URL("/", request.url))
   }
 
+  if (request.nextUrl.pathname === "/panel") {
+    status = validatePanelAccess(token)
+  }
+
   const locale =
     languages.find((lang) => request.nextUrl.pathname.startsWith(`/${lang}`)) ||
-    "pl"
+    "en"
 
   request.headers.set("x-locale", locale)
 
-  return i18nRouter(request, i18nConfig)
+  return createResponse(request, status)
+  // return i18nRouter(request, i18nConfig)
+}
+
+export const config = {
+  matcher: [
+    "/((?!auth/|api|_next/static|_next/image|assets|favicon.ico|sw.js|site.webmanifest).*)",
+  ],
 }

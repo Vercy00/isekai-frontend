@@ -1,7 +1,11 @@
-import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-
-import { Navbar } from "./components/navbar"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
+import { PanelPath } from "@/components/panel/panel-path"
+import { PanelSidebar } from "@/components/panel/panel-sidebar"
 
 interface PanelLayoutProps {
   children: React.ReactNode
@@ -9,12 +13,20 @@ interface PanelLayoutProps {
 
 export default async function PanelLayout({ children }: PanelLayoutProps) {
   return (
-    <div className="flex h-[100dvh] w-full">
-      <Navbar />
-      <Separator orientation="vertical" />
-      <ScrollArea className="max-h-[100dvh] w-full overflow-y-hidden">
-        <div className="p-4">{children}</div>
-      </ScrollArea>
-    </div>
+    <SidebarProvider>
+      <PanelSidebar />
+      <SidebarInset>
+        <main className="w-full p-4">
+          <header className="flex h-12 shrink-0 items-center gap-2">
+            <div className="flex items-center gap-2 pb-4">
+              <SidebarTrigger className="-ml-1" />
+              <Separator orientation="vertical" className="mr-2 h-4" />
+              <PanelPath />
+            </div>
+          </header>
+          {children}
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }

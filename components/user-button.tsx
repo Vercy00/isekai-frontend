@@ -63,11 +63,8 @@ export function UserButton() {
             )}
           </Button>
         </SheetTrigger>
-        <SheetContent
-          withClose={false}
-          className="flex flex-col justify-between"
-        >
-          <SheetHeader>
+        <SheetContent className="flex flex-col justify-between p-4">
+          <SheetHeader className="p-0">
             <SheetTitle>
               <VisuallyHidden.Root>User Menu</VisuallyHidden.Root>
             </SheetTitle>

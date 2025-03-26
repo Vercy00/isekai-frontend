@@ -13,7 +13,7 @@ export const metadata = {
 
 export default async function Home() {
   const animeList = await animeService.getAnimeList()
-  // const lastTranslations = (await fansubService.getLastTranslations()).data
+  const lastTranslations = (await fansubService.getLastTranslations()).data
   const animeListTop = await animeService.getAnimeList(
     new URLSearchParams({
       size: "8",
@@ -26,7 +26,7 @@ export default async function Home() {
       <div className="col-start-1 col-end-8 flex flex-col gap-4">
         <div>
           <h2 className="m-2 text-3xl">Ostatnio dodane napisy</h2>
-          {/* <AutoplayAnimeCarousel itemList={lastTranslations.content} /> */}
+          <AutoplayAnimeCarousel itemList={lastTranslations.content} />
         </div>
 
         <div>

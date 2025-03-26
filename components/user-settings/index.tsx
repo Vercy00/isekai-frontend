@@ -7,12 +7,12 @@ import {
   DialogTrigger,
 } from "../ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
-import { AccountSettings } from "./account-settings"
 import { EmailSettings } from "./email-settings"
 import { PasswordSettings } from "./password-settings"
+import { ProfileSettings } from "./profile-settings"
 
 const tabs = {
-  profile: { component: <AccountSettings />, name: "Profil" },
+  profile: { component: <ProfileSettings />, name: "Profil" },
   password: { component: <PasswordSettings />, name: "Hasło" },
   email: { component: <EmailSettings />, name: "Email" },
 }
@@ -38,7 +38,7 @@ export function UserSettings() {
               <TabsTrigger
                 key={key}
                 value={key}
-                className="w-full justify-start capitalize hover:bg-muted data-[state=active]:bg-muted"
+                className="hover:bg-muted data-[state=active]:bg-muted w-full justify-start capitalize"
               >
                 {value.name}
               </TabsTrigger>

@@ -1,12 +1,14 @@
+import { AxiosRequestConfig } from "axios"
+
 import {
   FakeMember,
   Group,
   GroupNode,
   Post,
-  Subtitle,
+  Subtitles,
   Translation,
 } from "@/types/fansub"
-import { ItemPage } from "@/types/page"
+import { ItemPage, ItemPageFilters } from "@/types/page"
 
 import { Api } from "./api.service"
 
@@ -15,186 +17,178 @@ export class FansubService extends Api {
     super("/fansub")
   }
 
-  async searchGroups(groupName: string) {
-    return await this._get<ItemPage<GroupNode>>("/groups", {
+  searchGroups(groupName: string) {
+    return this._get<ItemPage<GroupNode>>("/groups", {
       params: { groupName },
     })
   }
 
-  async getGroup(groupName: string) {
-    return await this._get<Group>(`/groups/${groupName}`)
+  getGroup(groupName: string) {
+    return this._get<Group>(`/groups/${groupName}`)
   }
 
-  async patchGroup(groupName: string, group: Partial<Group>) {
-    return await this._patch<Group>(`/groups/${groupName}`, group)
+  patchGroup(groupName: string, group: Partial<Group>) {
+    return this._patch<Group>(`/groups/${groupName}`, group)
   }
 
-  async getPosts(groupName: string) {
-    return await this._get<ItemPage<Post>>(`/groups/${groupName}/posts`)
+  getPosts(groupName: string) {
+    return this._get<ItemPage<Post>>(`/groups/${groupName}/posts`)
   }
 
-  async addPost(groupName: string, post: Partial<Post>) {
-    return await this._post(`/groups/${groupName}/posts`, post)
+  addPost(groupName: string, post: Partial<Post>) {
+    return this._post(`/groups/${groupName}/posts`, post)
   }
 
-  async patchPost(groupName: string, postId: string, post: Partial<Post>) {
-    return await this._patch(`/groups/${groupName}/posts/${postId}`, post)
+  patchPost(groupName: string, postId: string, post: Partial<Post>) {
+    return this._patch(`/groups/${groupName}/posts/${postId}`, post)
   }
 
-  async updateProfilePicture(groupName: string, formData: FormData) {
-    return await this._put(`/groups/${groupName}/avatar`, formData, {
+  updateProfilePicture(groupName: string, formData: FormData) {
+    return this._put(`/groups/${groupName}/avatar`, formData, {
       timeout: 1_000 * 60 * 5,
     })
   }
 
-  async updateBanner(groupName: string, formData: FormData) {
-    return await this._put(`/groups/${groupName}/banner`, formData, {
+  updateBanner(groupName: string, formData: FormData) {
+    return this._put(`/groups/${groupName}/banner`, formData, {
       timeout: 1_000 * 60 * 5,
     })
   }
 
-  async addMemberRole(groupName: string, userId: string, role: string) {
-    return await this._put(
-      `/groups/${groupName}/members/${userId}/roles/${role}`
-    )
+  addMemberRole(groupName: string, userId: string, role: string) {
+    return this._put(`/groups/${groupName}/members/${userId}/roles/${role}`)
   }
 
-  async removeMemberRole(groupName: string, userId: string, role: string) {
-    return await this._delete(
-      `/groups/${groupName}/members/${userId}/roles/${role}`
-    )
+  removeMemberRole(groupName: string, userId: string, role: string) {
+    return this._delete(`/groups/${groupName}/members/${userId}/roles/${role}`)
   }
 
-  async getTranslations(groupName: string, status: string = "") {
-    return await this._get<Translation[]>(`/groups/${groupName}/translations`, {
+  getTranslations(groupName: string, status: string = "") {
+    return this._get<Translation[]>(`/groups/${groupName}/translations`, {
       params: { status },
     })
   }
 
-  async addTranslation(groupName: string, animeId: number) {
-    return await this._post(`/groups/${groupName}/translations`, { animeId })
+  addTranslation(groupName: string, animeId: number) {
+    return this._post(`/groups/${groupName}/translations`, { animeId })
   }
 
-  async getTranslation(groupName: string, animeId: number) {
-    return await this._get<Translation>(
+  getTranslation(groupName: string, animeId: number) {
+    return this._get<Translation>(
       `/groups/${groupName}/translations/${animeId}`
     )
   }
 
-  async getSubtitles(groupName: string, animeId: number) {
-    return await this._get<Subtitle[]>(
+  getSubtitles(
+    groupName: string,
+    animeId: number,
+    filters?: ItemPageFilters<Subtitles>,
+    options?: AxiosRequestConfig<Subtitles>
+  ) {
+    return this._get<ItemPage<Subtitles>>(
       `/groups/${groupName}/translations/${animeId}/subtitles`,
       {
-        params: {
-          size: "1000",
-        },
+        ...options,
+        params: filters,
       }
     )
   }
 
-  async addTranslationAuthor(
-    groupName: string,
-    animeId: number,
-    userId: string
-  ) {
-    return await this._put<Translation>(
+  addTranslationAuthor(groupName: string, animeId: number, userId: string) {
+    return this._put<Translation>(
       `/groups/${groupName}/translations/${animeId}/authors/${userId}`
     )
   }
 
-  async addFakeTranslationAuthor(
+  addFakeTranslationAuthor(
     groupName: string,
     animeId: number,
     memberId: string
   ) {
-    return await this._put<Translation>(
+    return this._put<Translation>(
       `/groups/${groupName}/translations/${animeId}/fakeAuthors/${memberId}`
     )
   }
 
-  async removeTranslationAuthor(
-    groupName: string,
-    animeId: number,
-    userId: string
-  ) {
-    return await this._delete(
+  removeTranslationAuthor(groupName: string, animeId: number, userId: string) {
+    return this._delete(
       `/groups/${groupName}/translations/${animeId}/authors/${userId}`
     )
   }
 
-  async removeFakeTranslationAuthor(
+  removeFakeTranslationAuthor(
     groupName: string,
     animeId: number,
     memberId: string
   ) {
-    return await this._delete(
+    return this._delete(
       `/groups/${groupName}/translations/${animeId}/fakeAuthors/${memberId}`
     )
   }
 
-  async addTranslationAuthorRole(
+  addTranslationAuthorRole(
     groupName: string,
     animeId: number,
     userId: string,
     role: string
   ) {
-    return await this._put(
+    return this._put(
       `/groups/${groupName}/translations/${animeId}/authors/${userId}/roles/${role}`
     )
   }
 
-  async removeTranslationAuthorRole(
+  removeTranslationAuthorRole(
     groupName: string,
     animeId: number,
     userId: string,
     role: string
   ) {
-    return await this._delete(
+    return this._delete(
       `/groups/${groupName}/translations/${animeId}/authors/${userId}/roles/${role}`
     )
   }
 
-  async addFakeTranslationAuthorRole(
+  addFakeTranslationAuthorRole(
     groupName: string,
     animeId: number,
     memberId: string,
     role: string
   ) {
-    return await this._put(
+    return this._put(
       `/groups/${groupName}/translations/${animeId}/fakeAuthors/${memberId}/roles/${role}`
     )
   }
 
-  async removeFakeTranslationAuthorRole(
+  removeFakeTranslationAuthorRole(
     groupName: string,
     animeId: number,
     memberId: string,
     role: string
   ) {
-    return await this._delete(
+    return this._delete(
       `/groups/${groupName}/translations/${animeId}/fakeAuthors/${memberId}/roles/${role}`
     )
   }
 
-  async getTranslationsToAnime(animeId: number) {
-    return await this._get<ItemPage<Translation>>("/translations", {
+  getTranslationsToAnime(animeId: number) {
+    return this._get<ItemPage<Translation>>("/translations", {
       params: { animeId },
     })
   }
 
-  async getLastTranslations() {
-    return await this._get<ItemPage<Translation>>("/translations", {
+  getLastTranslations() {
+    return this._get<ItemPage<Translation>>("/translations", {
       params: { size: "20" },
     })
   }
 
-  async addSubtitle(
+  addSubtitle(
     groupName: string,
     animeId: number,
     episodeNum: number,
     formData: FormData
   ) {
-    return await this._put<Subtitle>(
+    return this._put<Subtitles>(
       `/groups/${groupName}/translations/${animeId}/subtitles/${episodeNum}`,
       formData,
       {
@@ -203,13 +197,13 @@ export class FansubService extends Api {
     )
   }
 
-  async patchSubtitle(
+  patchSubtitle(
     groupName: string,
     animeId: number,
     episodeNum: number,
     formData: FormData
   ) {
-    return await this._patch<Subtitle>(
+    return this._patch<Subtitles>(
       `/groups/${groupName}/translations/${animeId}/subtitles/${episodeNum}`,
       formData,
       {
@@ -218,12 +212,12 @@ export class FansubService extends Api {
     )
   }
 
-  async downloadSubtitle(
+  downloadSubtitle(
     groupName: string,
     animeId: number,
     episodeNumList: number[]
   ) {
-    return await this._get<Subtitle[]>("/subtitles", {
+    return this._get<Subtitles[]>("/subtitles", {
       params: {
         groupName,
         animeId,
@@ -232,22 +226,19 @@ export class FansubService extends Api {
     })
   }
 
-  async inviteMember(groupName: string, userId: string) {
-    return await this._put(`/groups/${groupName}/members/${userId}`)
+  inviteMember(groupName: string, userId: string) {
+    return this._put(`/groups/${groupName}/members/${userId}`)
   }
 
-  async kickMember(groupName: string, userId: string) {
-    return await this._delete(`/groups/${groupName}/members/${userId}`)
+  kickMember(groupName: string, userId: string) {
+    return this._delete(`/groups/${groupName}/members/${userId}`)
   }
 
-  async deleteFakeMember(groupName: string, userId: string) {
-    return await this._delete(`/groups/${groupName}/fakeMembers/${userId}`)
+  deleteFakeMember(groupName: string, userId: string) {
+    return this._delete(`/groups/${groupName}/fakeMembers/${userId}`)
   }
 
-  async addFakeMember(groupName: string, request: { displayName: string }) {
-    return await this._post<FakeMember>(
-      `/groups/${groupName}/fakeMembers/`,
-      request
-    )
+  addFakeMember(groupName: string, request: { displayName: string }) {
+    return this._post<FakeMember>(`/groups/${groupName}/fakeMembers/`, request)
   }
 }
