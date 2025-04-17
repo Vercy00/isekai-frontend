@@ -2,7 +2,6 @@
 
 import React from "react"
 import { cookies } from "next/headers"
-import { ServerNotificationService } from "@/services/server/server-notification.service"
 
 import { Notification } from "@/types/notification"
 import { mainConfig } from "@/config/main"
@@ -11,18 +10,17 @@ import { MainNav } from "@/components/layout/main-nav"
 import { SiteFooter } from "@/components/layout/site-footer"
 import { UserButton } from "@/components/user-button"
 
-const notificationService = new ServerNotificationService()
-
 interface NavbarLayoutProps {
   children: React.ReactNode
 }
 
 export default async function NavbarLayout({ children }: NavbarLayoutProps) {
   const cookie = await cookies()
-  var notifications: Notification[] = []
+  const notifications: Notification[] = []
 
-  if (cookie.has("SESSION"))
-    notifications = await notificationService.getNotifications()
+  if (cookie.has("SESSION")) {
+    // TODO: notifications
+  }
 
   return (
     <NotificationProvider initNotifications={notifications}>

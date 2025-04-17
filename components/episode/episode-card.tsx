@@ -1,11 +1,11 @@
 "use client"
 
 import Image from "next/image"
+import { SubtitleDto } from "@/gen/fansub"
 import { format } from "date-fns"
 import { pl } from "date-fns/locale"
 import { AppWindowIcon, ListPlusIcon, ListXIcon } from "lucide-react"
 
-import { Subtitles } from "@/types/fansub"
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -19,7 +19,7 @@ interface EpisodeCardProps {
   animeId: number
   groupName: string
   title: string
-  subtitle?: Subtitles
+  subtitle?: SubtitleDto
   episodeNum: number
   selected?: boolean
   anySubtitles?: boolean

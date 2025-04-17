@@ -4,7 +4,12 @@ import { useMemo, useState } from "react"
 import { ANIME } from "@/constants/anime"
 import { useUserList } from "@/contexts/local/anime"
 import { useAnime } from "@/contexts/local/anime/use-anime"
-import { AnimeService } from "@/services/client/anime.service"
+import {
+  deleteMyListStatusScoreClient,
+  patchMyListStatusClient,
+  patchMyListStatusMutationRequestSchema,
+  ScoreReq,
+} from "@/gen/anime"
 import { TRANSLATION } from "@/translations/pl-pl"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { AxiosError } from "axios"
@@ -32,35 +37,35 @@ import {
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 
-const animeService = new AnimeService()
+// const FormSchema = z.object({
+//   score: z.object({
+//     animation: z
+//       .number()
+//       .min(1, { message: "Ocena musi wynosić conajmniej 1" })
+//       .max(10),
+//     music: z
+//       .number()
+//       .min(1, { message: "Ocena musi wynosić conajmniej 1" })
+//       .max(10),
+//     plot: z
+//       .number()
+//       .min(1, { message: "Ocena musi wynosić conajmniej 1" })
+//       .max(10),
+//     characters: z
+//       .number()
+//       .min(1, { message: "Ocena musi wynosić conajmniej 1" })
+//       .max(10),
+//   }),
+// })
 
-const FormSchema = z.object({
-  score: z.object({
-    animation: z
-      .number()
-      .min(1, { message: "Ocena musi wynosić conajmniej 1" })
-      .max(10),
-    music: z
-      .number()
-      .min(1, { message: "Ocena musi wynosić conajmniej 1" })
-      .max(10),
-    plot: z
-      .number()
-      .min(1, { message: "Ocena musi wynosić conajmniej 1" })
-      .max(10),
-    characters: z
-      .number()
-      .min(1, { message: "Ocena musi wynosić conajmniej 1" })
-      .max(10),
-  }),
-})
+const formSchema = patchMyListStatusMutationRequestSchema
 
 export function ScoreForm() {
   const { id: animeId } = useAnime()
   const { userList, setUserList } = useUserList()
   const [open, setOpen] = useState(false)
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       score: {
         ...(userList.score || {
@@ -73,19 +78,20 @@ export function ScoreForm() {
     },
     mode: "onChange",
   })
-  const score = form.watch("score")
+  const score = form.watch("score")!
   const mean = useMemo(() => {
     return (
       Object.entries(score)
-        .filter(([key, _]) => key !== "mean")
+        .filter(([key]) => key !== "mean")
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         .map(([_, value]) => value)
         .reduce((p, n) => p + n, 0) / 4
     )
-  }, [score.animation, score.characters, score.music, score.plot])
+  }, [score])
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     await new Promise((resolve) =>
-      toast.promise(animeService.patchUserStatus(animeId, data), {
+      toast.promise(patchMyListStatusClient({ animeId }, data), {
         loading: userList.score
           ? "Dodawanie oceny..."
           : "Aktualizowanie oceny...",
@@ -109,24 +115,19 @@ export function ScoreForm() {
 
   function deleteScore() {
     new Promise((resolve) =>
-      toast.promise(
-        animeService.patchUserStatus(animeId, {
-          score: { animation: 0, characters: 0, music: 0, plot: 0 },
-        }),
-        {
-          loading: "Usuwanie oceny...",
-          success: (res) => {
-            resolve(false)
-            setUserList(res.data!)
-            setOpen(false)
-            return "Ocena została usunięta"
-          },
-          error: (err: AxiosError) => {
-            resolve(false)
-            return "Nieznany błąd"
-          },
-        }
-      )
+      toast.promise(deleteMyListStatusScoreClient({ animeId }), {
+        loading: "Usuwanie oceny...",
+        success: (res) => {
+          resolve(false)
+          setUserList(res.data!)
+          setOpen(false)
+          return "Ocena została usunięta"
+        },
+        error: (err: AxiosError) => {
+          resolve(false)
+          return "Nieznany błąd"
+        },
+      })
     )
   }
 
@@ -146,7 +147,7 @@ export function ScoreForm() {
               <FormField
                 key={score.name}
                 control={form.control}
-                name={`score.${score.name as keyof z.infer<typeof FormSchema>["score"]}`}
+                name={`score.${score.name as keyof ScoreReq}`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center justify-between">

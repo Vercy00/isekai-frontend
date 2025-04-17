@@ -1,10 +1,10 @@
 "use client"
 
 import Link from "next/link"
+import { AnimeListStatusNodeDto } from "@/gen/anime"
 import { Row } from "@tanstack/react-table"
 import { Ellipsis } from "lucide-react"
 
-import { UserList } from "@/types/anime"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -19,15 +19,15 @@ interface DataTableRowActionsProps<TData> {
   row: Row<TData>
 }
 
-export function DataTableRowActions<TData>({
+export function DataTableRowActions({
   row,
-}: DataTableRowActionsProps<UserList>) {
+}: DataTableRowActionsProps<AnimeListStatusNodeDto>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+          className="data-[state=open]:bg-muted flex h-8 w-8 p-0"
         >
           <Ellipsis className="h-4 w-4" />
           <span className="sr-only">Open menu</span>

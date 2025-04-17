@@ -1,14 +1,9 @@
 "use client"
 
 import React from "react"
+import { CommonPropertyDto, FindAnimeQueryParams, TagDto } from "@/gen/anime"
 import { SettingsIcon } from "lucide-react"
 
-import {
-  AnimeFilters,
-  AnimeMediaType,
-  AnimeStudio,
-  AnimeTag,
-} from "@/types/anime"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Button } from "@/components/ui/button"
 import Combobox, { ComboboxAcordion } from "@/components/ui/combobox"
@@ -20,11 +15,11 @@ import MultiCombobox, {
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 export interface AnimeSearchFormProps {
-  mediaTypes: AnimeMediaType[]
-  tags: AnimeTag[]
-  studios: AnimeStudio[]
-  filters: Partial<AnimeFilters>
-  onChange: (filters: Partial<AnimeFilters>) => void
+  mediaTypes: CommonPropertyDto[]
+  tags: TagDto[]
+  studios: CommonPropertyDto[]
+  filters: FindAnimeQueryParams
+  onChange: (filters: FindAnimeQueryParams) => void
 }
 
 export default function AnimeSearchForm({
@@ -37,8 +32,9 @@ export default function AnimeSearchForm({
   const [open, setOpen] = React.useState(false)
   const isDesktop = useMediaQuery("(min-width: 1536px)")
 
-  const handleOnChange = (name: keyof AnimeFilters, val: any) => {
-    if (val === null || val === undefined || val === "" || val?.length === 0) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleOnChange = (name: keyof FindAnimeQueryParams, val: any) => {
+    if (val === null || val === undefined) {
       delete filters[name]
 
       onChange({ ...filters })
@@ -156,7 +152,7 @@ export default function AnimeSearchForm({
           </Button>
         </DrawerTrigger>
         <DrawerContent className="flex flex-col gap-4 pb-10">
-          <ScrollArea maxHeight="max-h-[70svh]">
+          <ScrollArea className="max-h-[70svh]">
             <MultiComboboxAcordion
               options={tags.filter(
                 (tag) => tag.type?.toLocaleLowerCase() === "genre"

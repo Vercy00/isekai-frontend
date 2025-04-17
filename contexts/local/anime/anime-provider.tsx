@@ -1,24 +1,38 @@
 "use client"
 
 import { ReactNode, useCallback, useEffect, useState } from "react"
-import { AnimeService } from "@/services/client/anime.service"
-import { FansubService } from "@/services/client/fansub.service"
+import {
+  AnimeDto,
+  AnimeListStatusDto,
+  getEpisodesClient,
+  PageEpisodeDto,
+} from "@/gen/anime"
+import { getSubtitlesClient, SubtitleDto, TranslationDto } from "@/gen/fansub"
 
-import { Anime, Episode, UserList } from "@/types/anime"
-import { Subtitles, Translation } from "@/types/fansub"
-import { ItemPage, ItemPageFilters } from "@/types/page"
+import { Episode } from "@/types/anime"
+import { ItemPageFilters } from "@/types/page"
 
 import { AnimeContext } from "./anime-context"
 
-const animeService = new AnimeService()
-const fansubService = new FansubService()
-
 interface AnimeProviderProps {
   children: ReactNode
-  anime: Anime
-  episodes: ItemPage<Episode>
-  translations: Translation[]
-  userList: UserList
+  anime: AnimeDto
+  episodes: PageEpisodeDto
+  translations: TranslationDto[]
+  userList: AnimeListStatusDto | null
+}
+
+const defaultUserList: AnimeListStatusDto = {
+  score: {
+    animation: 0,
+    music: 0,
+    plot: 0,
+    characters: 0,
+    mean: 0,
+  },
+  watchedEpisodes: 0,
+  status: "WATCHING",
+  favorite: false,
 }
 
 function AnimeProvider({
@@ -29,14 +43,16 @@ function AnimeProvider({
   userList: initUserList,
 }: AnimeProviderProps) {
   const [translations] = useState(initTranslations)
-  const [userList, setUserList] = useState(initUserList)
+  const [userList, setUserList] = useState<AnimeListStatusDto>(
+    initUserList ?? defaultUserList
+  )
   const [episodes, setEpisodes] = useState({
     episodes: initEpisodes,
     loading: false,
     controller: new AbortController(),
   })
   const [subtitles, setSubtitles] = useState<{
-    subtitles: Subtitles[]
+    subtitles: SubtitleDto[]
     loading: boolean
   }>({ subtitles: [], loading: false })
   const [anime] = useState(initAnime)
@@ -51,13 +67,15 @@ function AnimeProvider({
         controller: controller,
       }))
 
-      animeService
-        .getEpisodes(anime.id, filters, {
+      getEpisodesClient(
+        { animeId: anime.id },
+        { ...filters },
+        {
           signal: controller.signal,
-        })
-        .then(({ data }) =>
-          setEpisodes((s) => ({ ...s, episodes: data, loading: false }))
-        )
+        }
+      ).then((data) =>
+        setEpisodes((s) => ({ ...s, episodes: data, loading: false }))
+      )
 
       if (!groupName) return
 
@@ -66,27 +84,24 @@ function AnimeProvider({
         loading: true,
       }))
 
-      fansubService
-        .getSubtitles(
-          groupName,
-          anime.id,
-          filters as ItemPageFilters<Subtitles>,
-          {
-            signal: controller.signal,
-          }
-        )
-        .then(({ data }) =>
-          setSubtitles({ subtitles: data.content, loading: false })
-        )
+      getSubtitlesClient(
+        { groupName, animeId: anime.id },
+        { ...filters },
+        {
+          signal: controller.signal,
+        }
+      ).then((data) =>
+        setSubtitles({ subtitles: data.content, loading: false })
+      )
     },
-    [anime, setEpisodes]
+    [anime.id, episodes.controller]
   )
 
   useEffect(
     () => () => {
       episodes.controller.abort()
     },
-    []
+    [episodes.controller]
   )
 
   return (

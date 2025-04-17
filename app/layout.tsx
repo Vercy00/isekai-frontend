@@ -6,51 +6,40 @@ import "@/styles/globals.css"
 import { Metadata } from "next"
 import { headers } from "next/headers"
 import { Providers } from "@/contexts/providers"
-import { UserService } from "@/services/client/user.service"
+import { getUserClient } from "@/gen/users"
 import { GoogleAnalytics } from "@next/third-parties/google"
 import { dir } from "i18next"
 import { getServerSession } from "next-auth"
 
 import { siteConfig } from "@/config/site"
+import { getAuthOptions } from "@/lib/auth"
 import { initTranslations } from "@/lib/i18n"
 import { defaultNS } from "@/lib/i18n/settings"
 import { IUserState } from "@/lib/store/user-slice"
 import { Toaster } from "@/components/ui/sonner"
 import { CookieBanner } from "@/components/layout"
 
-import { authOptions } from "./auth/[...nextauth]/route"
-
 const inter = Inter({ subsets: ["latin"] })
 const lexend = Lexend({ subsets: ["latin"] })
 
-const userService = new UserService()
-
-type RootLayoutProps = {
-  children: ReactNode
-}
+type RootLayoutProps = { children: ReactNode }
 
 export const metadata: Metadata = {
-  title: {
-    default: `${siteConfig.name}`,
-    template: `%s - ${siteConfig.name}`,
-  },
+  title: { default: `${siteConfig.name}`, template: `%s - ${siteConfig.name}` },
   description: "Baza anime oraz napisów",
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   const headersList = await headers()
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession(await getAuthOptions())
   const lang = headersList.get("x-locale")!
   const { resources } = await initTranslations(lang, [defaultNS])
   let initUser: IUserState | undefined
 
   if (session) {
-    const user = (await userService.getCurrentUser()).data
+    const user = await getUserClient({ username: "@me" })
 
-    initUser = {
-      isAuthorized: true,
-      user,
-    }
+    initUser = { isAuthorized: true, user }
   }
 
   return (

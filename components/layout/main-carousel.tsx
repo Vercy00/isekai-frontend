@@ -3,19 +3,16 @@
 import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { AnimeNodeDtoPage } from "@/gen/types/AnimeNodeDtoPage"
 import Autoplay from "embla-carousel-autoplay"
 import { Dot, Flame, Star, Tv2 } from "lucide-react"
 
-import { Anime } from "@/types/anime"
-import { ItemPage } from "@/types/page"
 import { cn } from "@/lib/utils"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel"
 
@@ -23,10 +20,12 @@ import { Indicator } from "../indicator"
 import { buttonVariants } from "../ui/button"
 
 interface MainCarouselProps {
-  animeList: ItemPage<Anime>
+  animeNodeDtoPage: AnimeNodeDtoPage
 }
 
-export function MainCarousel({ animeList }: MainCarouselProps) {
+export function MainCarousel({
+  animeNodeDtoPage: { content },
+}: MainCarouselProps) {
   const plugin = React.useRef(
     Autoplay({
       delay: 2000,
@@ -36,7 +35,7 @@ export function MainCarousel({ animeList }: MainCarouselProps) {
   )
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)
-  const [count, setCount] = React.useState(animeList.content.length)
+  const [count, setCount] = React.useState(content.length)
 
   const scrollTo = (index: number) => api?.scrollTo(index)
 
@@ -63,7 +62,7 @@ export function MainCarousel({ animeList }: MainCarouselProps) {
         className="w-full"
       >
         <CarouselContent>
-          {animeList.content.map((anime, index) => (
+          {content.map((anime, index) => (
             <CarouselItem key={index} className="basis-[90%]">
               <Card>
                 <CardContent className="flex h-[50vh] min-h-[200px] items-center justify-center overflow-hidden rounded-md border p-0">

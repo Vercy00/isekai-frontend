@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react"
 import { ANIME_LIST_STATUS } from "@/constants/anime-list-status"
 import { useAnime, useUserList } from "@/contexts/local/anime"
-import { AnimeService } from "@/services/client/anime.service"
+import {
+  patchMyListStatusClient,
+  patchMyListStatusMutationRequestSchema,
+} from "@/gen/anime"
 import { TRANSLATION } from "@/translations/pl-pl"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { AxiosError } from "axios"
@@ -12,7 +15,6 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
 
-import { UserList, UserListReq } from "@/types/anime"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -34,19 +36,14 @@ import {
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-const animeService = new AnimeService()
-
-const FormSchema = z.object({
-  watchedEpisodes: z.number(),
-  status: z.string(),
-})
+const formSchema = patchMyListStatusMutationRequestSchema
 
 export function AnimeListForm() {
   const { id: animeId, numEpisodes } = useAnime()
   const { userList, setUserList } = useUserList()
   const [open, setOpen] = useState(false)
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       watchedEpisodes: userList.watchedEpisodes,
       status: userList.status ?? "WATCHING",
@@ -58,22 +55,45 @@ export function AnimeListForm() {
     form.setValue("status", userList.status ?? "WATCHING")
   }, [userList])
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof formSchema>) {
     await new Promise((resolve) =>
-      toast.promise(
-        animeService.patchUserStatus(animeId, data as Partial<UserList>),
-        {
-          loading: !userList.status
-            ? "Dodawanie do listy..."
-            : "Aktualizowanie listy...",
-          success: (res) => {
-            resolve(false)
-            setUserList(res.data!)
-            setOpen(false)
+      toast.promise(patchMyListStatusClient({ animeId }, data), {
+        loading: !userList.status
+          ? "Dodawanie do listy..."
+          : "Aktualizowanie listy...",
+        success: (data) => {
+          resolve(false)
+          setUserList(data)
+          setOpen(false)
 
-            return !userList.status
-              ? "Dodano do listy"
-              : "Lista została zaktualizowana"
+          return !userList.status
+            ? "Dodano do listy"
+            : "Lista została zaktualizowana"
+        },
+        error: (err: AxiosError) => {
+          resolve(false)
+
+          return "Nieznany błąd"
+        },
+      })
+    )
+  }
+
+  function addToFavorite() {
+    new Promise((resolve) =>
+      toast.promise(
+        patchMyListStatusClient({ animeId }, { favorite: !userList.favorite }),
+        {
+          loading: userList.favorite
+            ? "Usuwanie z ulubionych..."
+            : "Dodawanie do ulubionych...",
+          success: (data) => {
+            resolve(false)
+            setUserList(data)
+
+            return userList.favorite
+              ? "Usunięto z ulubionych"
+              : "Dodano do ulubionych"
           },
           error: (err: AxiosError) => {
             resolve(false)
@@ -82,29 +102,6 @@ export function AnimeListForm() {
           },
         }
       )
-    )
-  }
-
-  function addToFavorite() {
-    new Promise((resolve) =>
-      toast.promise(animeService.addToFavorite(animeId, !userList.favorite), {
-        loading: userList.favorite
-          ? "Usuwanie z ulubionych..."
-          : "Dodawanie do ulubionych...",
-        success: (res) => {
-          resolve(false)
-          setUserList(res.data!)
-
-          return userList.favorite
-            ? "Usunięto z ulubionych"
-            : "Dodano do ulubionych"
-        },
-        error: (err: AxiosError) => {
-          resolve(false)
-
-          return "Nieznany błąd"
-        },
-      })
     )
   }
 

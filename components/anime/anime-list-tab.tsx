@@ -3,10 +3,13 @@
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { ANIME_LIST_STATUS } from "@/constants/anime-list-status"
-import { AnimeService } from "@/services/client/anime.service"
+import {
+  AnimeListStatusNodeDto,
+  getAnimeListStatusesClient,
+  GetAnimeListStatusesQueryParamsTypeEnum,
+} from "@/gen/anime"
 import { TRANSLATION } from "@/translations/pl-pl"
 
-import { UserList } from "@/types/anime"
 import { AnimeListStatus } from "@/types/animeListStatus"
 import { User } from "@/types/user"
 import { AdvancedTable } from "@/components/ui/advanced-table"
@@ -16,11 +19,9 @@ import { columns } from "./anime-list-table/columns"
 
 interface AnimeListTabProps {
   defaultTab: AnimeListStatus["name"] | "summary"
-  initList?: UserList[]
+  initList?: AnimeListStatusNodeDto[]
   user: User
 }
-
-const animeService = new AnimeService()
 
 export function AnimeListTab({
   defaultTab = "summary",
@@ -66,11 +67,11 @@ export function AnimeListTab({
               initData={initList}
               fetchData={async () =>
                 (
-                  await animeService.getUserListStatus(
-                    user.id,
-                    defaultTab?.toLocaleUpperCase() as any
-                  )
-                ).data!
+                  await getAnimeListStatusesClient({
+                    userId: user.id,
+                    type: defaultTab?.toLocaleUpperCase() as GetAnimeListStatusesQueryParamsTypeEnum,
+                  })
+                ).data
               }
             />
           </TabsContent>

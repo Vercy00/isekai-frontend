@@ -3,6 +3,27 @@ import { Captions, Database, Lock, UserRoundCog } from "lucide-react"
 import { PanelItem } from "@/components/panel/panel-sidebar"
 
 const panelSite: { [key: string]: PanelItem[] } = {
+  adminAnime: [
+    {
+      title: "anime",
+      url: "/panel/admin/anime",
+      icon: <Database />,
+      items: [
+        {
+          title: "add",
+          url: "/panel/admin/anime/add",
+        },
+        {
+          title: "edit",
+          url: "/panel/admin/anime/edit",
+        },
+        {
+          title: "import",
+          url: "/panel/admin/anime/import",
+        },
+      ],
+    },
+  ],
   navMain: [
     {
       title: "user",
@@ -31,11 +52,11 @@ const panelSite: { [key: string]: PanelItem[] } = {
       icon: <Database />,
       items: [
         {
-          title: "request_edit_anime",
+          title: "edit",
           url: "/panel/request/anime/edit",
         },
         {
-          title: "request_import_anime",
+          title: "import",
           url: "/panel/request/anime/import",
         },
       ],

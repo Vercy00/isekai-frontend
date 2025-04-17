@@ -1,13 +1,13 @@
 import Link from "next/link"
+import { AnimeListStatusNodeDto } from "@/gen/anime"
 import { ColumnDef } from "@tanstack/react-table"
 
-import { UserList } from "@/types/anime"
 import { DataTableColumnHeader } from "@/components/ui/advanced-table"
 import { AnimeThumbnail } from "@/components/anime/anime-thumbnail"
 
 import { DataTableRowActions } from "./anime-table-row-actions"
 
-export const columns: ColumnDef<UserList>[] = [
+export const columns: ColumnDef<AnimeListStatusNodeDto>[] = [
   {
     id: "thumbnail",
     size: 100,
@@ -36,7 +36,7 @@ export const columns: ColumnDef<UserList>[] = [
           href={`/anime/${row.original.animeNode!.id}/${row.original.animeNode!.title.replaceAll(" ", "_").replaceAll(/[^a-zA-Z0-9_ ]/gm, "_")}`}
         >
           <div className="flex space-x-2">
-            <span className="line-clamp-2 max-w-[500px] truncate whitespace-normal font-medium">
+            <span className="line-clamp-2 max-w-[500px] truncate font-medium whitespace-normal">
               {row.original.animeNode!.title}
             </span>
           </div>

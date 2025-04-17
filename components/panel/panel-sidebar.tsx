@@ -1,14 +1,7 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@radix-ui/react-collapsible"
-import { ChevronRight, GalleryVerticalEnd } from "lucide-react"
+import { GalleryVerticalEnd } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { panelSite } from "@/config/panel-site"
@@ -22,13 +15,11 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
 
 import { NavUser } from "./nav-user"
+import { CollapsibleItem, RedirectItem } from "./panel-item"
 
 export interface PanelItem {
   title: string
@@ -90,64 +81,6 @@ function PanelSidebar() {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
-}
-
-function CollapsibleItem(item: PanelItem) {
-  const { t } = useTranslation()
-  const pathname = usePathname()
-
-  return (
-    <Collapsible
-      key={item.title}
-      asChild
-      defaultOpen={
-        pathname.startsWith(item.url) ||
-        (pathname === "/panel" && item.title === "user_settings")
-      }
-      className="group/collapsible"
-    >
-      <SidebarMenuItem>
-        <CollapsibleTrigger asChild>
-          <SidebarMenuButton tooltip={item.title}>
-            {item.icon && item.icon}
-            <span>{t(`panel.${item.title}`)}</span>
-            <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-          </SidebarMenuButton>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <SidebarMenuSub>
-            {item.items?.map((subItem) => (
-              <SidebarMenuSubItem key={subItem.title}>
-                <SidebarMenuSubButton
-                  asChild
-                  isActive={pathname.startsWith(subItem.url)}
-                >
-                  <Link href={subItem.url}>
-                    <span>{t(`panel.${subItem.title}`)}</span>
-                  </Link>
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
-            ))}
-          </SidebarMenuSub>
-        </CollapsibleContent>
-      </SidebarMenuItem>
-    </Collapsible>
-  )
-}
-
-function RedirectItem(item: PanelItem) {
-  const { t } = useTranslation()
-
-  return (
-    <SidebarMenuItem key={item.title}>
-      <SidebarMenuButton tooltip={item.title} asChild>
-        <a href={item.url}>
-          {item.icon && item.icon}
-          <span>{t(`panel.${item.title}`)}</span>
-        </a>
-      </SidebarMenuButton>
-    </SidebarMenuItem>
   )
 }
 

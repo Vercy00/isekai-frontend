@@ -30,126 +30,123 @@ export function UserButton() {
   const [openHover, setOpenHover] = useState(false)
   const user = useAppSelector((state) => state.userStore.user)
 
-  if (user)
+  if (!user) {
     return (
-      <Sheet
-        onOpenChange={(open) => {
-          setOpenSheet(open)
-          setCanHoverOpen(false)
-          setOpenHover(false)
-
-          open &&
-            setTimeout(() => {
-              setCanHoverOpen(true)
-              setOpenHover(false)
-            }, 300)
-        }}
-        open={openSheet}
-        modal
+      <Button
+        variant="secondary"
+        onClick={() => signIn("keycloak", { callbackUrl: "/auth" })}
       >
-        <SheetTrigger asChild>
-          <Button variant="secondary" className="relative">
-            <div className="absolute left-0 aspect-square h-full overflow-hidden rounded-l-md">
-              <Image
-                src={user.avatarUrl}
-                alt=""
-                fill
-                className="object-cover"
-              />
-            </div>
-            <span className="ml-10">{user.displayName}</span>
-            {notifications.length > 0 && (
-              <div className="absolute top-0 right-0 size-3 -translate-y-1/3 translate-x-1/3 rounded-full bg-red-600" />
-            )}
-          </Button>
-        </SheetTrigger>
-        <SheetContent className="flex flex-col justify-between p-4">
-          <SheetHeader className="p-0">
-            <SheetTitle>
-              <VisuallyHidden.Root>User Menu</VisuallyHidden.Root>
-            </SheetTitle>
-            <div className="flex justify-between">
-              <Link
-                href={`/profile/${user.username}`}
-                className={cn(
-                  buttonVariants({ variant: "secondary" }),
-                  "relative max-w-36 overflow-hidden pl-14"
-                )}
-                onClick={() => setOpenSheet(false)}
-              >
-                <div className="absolute left-0 aspect-square h-full">
-                  <Image
-                    src={user.avatarUrl}
-                    alt=""
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <span className="overflow-hidden text-ellipsis">
-                  {user.displayName}
-                </span>
-              </Link>
-
-              <HoverCard
-                openDelay={200}
-                open={openHover}
-                onOpenChange={(open) => setOpenHover(canHoverOpen && open)}
-              >
-                <HoverCardTrigger>
-                  <RadioGroup
-                    defaultValue="option-one"
-                    disabled
-                    className="bg-muted text-muted-foreground inline-flex h-10 items-center justify-center rounded-md p-1"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem
-                        value="option-one"
-                        id="option-one"
-                        radioItemType="tab"
-                      >
-                        JP
-                      </RadioGroupItem>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem
-                        value="option-two"
-                        id="option-two"
-                        radioItemType="tab"
-                      >
-                        EN
-                      </RadioGroupItem>
-                    </div>
-                  </RadioGroup>
-                </HoverCardTrigger>
-                <HoverCardContent className="w-fit text-sm">
-                  <p>Wybierz format tytułów</p>
-                </HoverCardContent>
-              </HoverCard>
-
-              <Notifications />
-            </div>
-          </SheetHeader>
-
-          <div className="grid gap-3">
-            <UserSettings />
-            <Button
-              className="w-full"
-              variant="destructive"
-              onClick={() => signOut()}
-            >
-              Wyloguj
-            </Button>
-          </div>
-        </SheetContent>
-      </Sheet>
+        Zaloguj się
+      </Button>
     )
+  }
 
   return (
-    <Button
-      variant="secondary"
-      onClick={() => signIn("keycloak", { callbackUrl: "/auth" })}
+    <Sheet
+      onOpenChange={(open) => {
+        setOpenSheet(open)
+        setCanHoverOpen(false)
+        setOpenHover(false)
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        open &&
+          setTimeout(() => {
+            setCanHoverOpen(true)
+            setOpenHover(false)
+          }, 300)
+      }}
+      open={openSheet}
+      modal
     >
-      Zaloguj się
-    </Button>
+      <SheetTrigger asChild>
+        <Button variant="secondary" className="relative">
+          <div className="absolute left-0 aspect-square h-full overflow-hidden rounded-l-md">
+            <Image src={user.avatarUrl} alt="" fill className="object-cover" />
+          </div>
+          <span className="ml-10">{user.displayName}</span>
+          {notifications.length > 0 && (
+            <div className="absolute top-0 right-0 size-3 -translate-y-1/3 translate-x-1/3 rounded-full bg-red-600" />
+          )}
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="flex flex-col justify-between p-4">
+        <SheetHeader className="p-0">
+          <SheetTitle>
+            <VisuallyHidden.Root>User Menu</VisuallyHidden.Root>
+          </SheetTitle>
+          <div className="flex justify-between">
+            <Link
+              href={`/profile/${user.username}`}
+              className={cn(
+                buttonVariants({ variant: "secondary" }),
+                "relative max-w-36 overflow-hidden pl-14"
+              )}
+              onClick={() => setOpenSheet(false)}
+            >
+              <div className="absolute left-0 aspect-square h-full">
+                <Image
+                  src={user.avatarUrl}
+                  alt=""
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <span className="overflow-hidden text-ellipsis">
+                {user.displayName}
+              </span>
+            </Link>
+
+            <HoverCard
+              openDelay={200}
+              open={openHover}
+              onOpenChange={(open) => setOpenHover(canHoverOpen && open)}
+            >
+              <HoverCardTrigger>
+                <RadioGroup
+                  defaultValue="option-one"
+                  disabled
+                  className="bg-muted text-muted-foreground inline-flex h-10 items-center justify-center rounded-md p-1"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem
+                      value="option-one"
+                      id="option-one"
+                      radioItemType="tab"
+                    >
+                      JP
+                    </RadioGroupItem>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem
+                      value="option-two"
+                      id="option-two"
+                      radioItemType="tab"
+                    >
+                      EN
+                    </RadioGroupItem>
+                  </div>
+                </RadioGroup>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-fit text-sm">
+                <p>Wybierz format tytułów</p>
+              </HoverCardContent>
+            </HoverCard>
+
+            <Notifications />
+          </div>
+        </SheetHeader>
+
+        <div className="grid gap-3">
+          {/* <UserSettings /> */}
+          <Button
+            className="w-full"
+            variant="destructive"
+            onClick={() => signOut()}
+          >
+            Wyloguj
+          </Button>
+        </div>
+      </SheetContent>
+    </Sheet>
   )
 }

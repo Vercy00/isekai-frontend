@@ -1,16 +1,50 @@
 import { Metadata, ResolvingMetadata } from "next"
 import { AnimeProvider } from "@/contexts/local/anime"
-import { FansubService } from "@/services/client/fansub.service"
-import { ServerAnimeService } from "@/services/server/server-anime.service"
+import {
+  AnimeDto,
+  AnimeListStatusDto,
+  getAnime11Client,
+  getEpisodesClient,
+  getMyListStatusClient,
+} from "@/gen/anime"
+import { getTranslationsClient } from "@/gen/fansub"
 import { getServerSession } from "next-auth"
 
-import { UserList } from "@/types/anime"
-import { SortDirection } from "@/types/page"
+import { getAuthOptions } from "@/lib/auth"
 import { AnimeDetailsContent } from "@/app/[lang]/(navbar)/anime/[animeId]/components/anime-details-content"
-import { authOptions } from "@/app/auth/[...nextauth]/route"
 
-const animeService = new ServerAnimeService()
-const fansubService = new FansubService()
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default async function AnimeDetails(request: any) {
+  const session = await getServerSession(await getAuthOptions())
+  const animeId = parseInt((await request.params).animeId)
+  const anime = (await getAnime11Client({ animeId })) as AnimeDto
+  const episodeSortDir = (await request.searchParams).episodeSortDir || "ASC"
+  const episodePage = parseInt((await request.searchParams).episodePage || "0")
+  const episodes = await getEpisodesClient(
+    { animeId },
+    { size: 12, page: episodePage, sort: [`episodeNum,${episodeSortDir}`] }
+  )
+  const translations = (await getTranslationsClient({ animeId })).content
+  // const translations: any[] = []
+  let userList: AnimeListStatusDto | null = null
+
+  if (session) {
+    try {
+      userList = await getMyListStatusClient({ animeId })
+    } catch {}
+  }
+
+  return (
+    <AnimeProvider
+      anime={anime}
+      episodes={episodes}
+      translations={translations}
+      userList={userList}
+    >
+      <AnimeDetailsContent />
+    </AnimeProvider>
+  )
+}
 
 type Props = {
   params: Promise<{ animeId: string }>
@@ -22,7 +56,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const animeId = parseInt((await params).animeId)
-  const anime = await animeService.getAnime(animeId)
+  const anime = (await getAnime11Client({ animeId })) as AnimeDto
   const searchImages = [(await searchParams).images || []].flat()
   const previousImages = (await parent).openGraph?.images ?? []
   const images = []
@@ -42,53 +76,4 @@ export async function generateMetadata(
       images: [anime.thumbnailUrl],
     },
   }
-}
-
-export default async function AnimeDetails(request: any) {
-  const session = await getServerSession(authOptions)
-  const animeId = parseInt((await request.params).animeId)
-  const anime = await animeService.getAnime(animeId)
-  const episodeSortDir = (await request.searchParams).episodeSortDir || "ASC"
-  const episodePage = parseInt((await request.searchParams).episodePage || "0")
-  const episodes = await animeService.getEpisodes(animeId, {
-    size: 12,
-    page: episodePage,
-    sort: [`episodeNum,${episodeSortDir as SortDirection}`],
-  })
-  const translations = (await fansubService.getTranslationsToAnime(animeId))
-    .data.content
-  // const translations: any[] = []
-  let userList: UserList = {
-    favorite: false,
-    score: {
-      animation: 0,
-      characters: 0,
-      music: 0,
-      plot: 0,
-      mean: 0,
-    },
-    status: null,
-    watchedEpisodes: 0,
-  }
-
-  if (session) {
-    try {
-      userList = await animeService.getUserList(animeId)
-    } catch {}
-  }
-
-  return (
-    <AnimeProvider
-      anime={anime}
-      episodes={episodes}
-      translations={translations}
-      userList={userList}
-    >
-      <AnimeDetailsContent
-        episodes={episodes}
-        viewport={(await request.searchParams).viewport}
-        translations={translations}
-      />
-    </AnimeProvider>
-  )
 }

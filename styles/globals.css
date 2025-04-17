@@ -118,8 +118,23 @@ button {
   cursor: pointer;
 }
 
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 5px;
+}
+
 * {
   scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
 }
 
 @layer base {
@@ -129,6 +144,10 @@ button {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@utility aspect-anime-thumbnail {
+  aspect-ratio: 146 / 212;
 }
 
 /* @layer base {

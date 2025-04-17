@@ -1,7 +1,6 @@
 "use client"
 
 import React from "react"
-import _ from "lodash"
 import { CheckIcon, ChevronsUpDown } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -59,10 +58,9 @@ export function MultiComboboxCommand<T>({
   }, [values])
 
   const toggleOption = (option: T) => {
-    var newValues = selectedValues
+    let newValues = selectedValues
     if (selectedValues.some((v) => getId(v) === getId(option))) {
       newValues = selectedValues.filter((v) => getId(v) !== getId(option))
-      console.log(selectedValues)
     } else {
       newValues.push(option)
     }
@@ -80,7 +78,7 @@ export function MultiComboboxCommand<T>({
       <CommandList>
         <CommandEmpty>{emptyMessage || "Brak wyników."}</CommandEmpty>
         <CommandGroup>
-          <ScrollArea maxHeight="max-h-40">
+          <ScrollArea className="max-h-40">
             {options.map((option) => {
               const isSelected = selectedValues.some(
                 (v) => getId(v) === getId(option)
@@ -186,7 +184,6 @@ interface MultiComboboxAcordionProps<T> extends MultiComboboxCommandProps<T> {
 
 export function MultiComboboxAcordion<T>({
   placeholder,
-  className,
   values: value,
   onValueChange,
   ...props

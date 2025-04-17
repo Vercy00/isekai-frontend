@@ -1,38 +1,38 @@
-export type AlternativeTitles = {
+interface AlternativeTitles {
   jp: string | null
   en: string | null
   synonyms: string[]
 }
 
-export type AnimeMediaType = {
+interface AnimeMediaType {
   id: number
   name: "tv" | "ova" | "movie" | "special" | "ona"
 }
 
-export type AnimeStatus = {
+interface AnimeStatus {
   id: number
   name: "finished_airing" | "ongoing" | "not_yet_aired" | "interrupted"
 }
 
-export type AnimeTag = {
+interface AnimeTag {
   id: number
   name: string
   type: string
 }
 
-export type AnimeStudio = {
+interface AnimeStudio {
   id: number
   name: string
 }
 
-export type AnimeSeason = "spring" | "summer" | "fall" | "winter"
+type AnimeSeason = "spring" | "summer" | "fall" | "winter"
 
-export type AnimeStartSeason = {
+interface AnimeStartSeason {
   year: number
   season: AnimeSeason
 }
 
-export type DayOfWeek =
+type DayOfWeek =
   | "monday"
   | "tuesday"
   | "wednesday"
@@ -41,12 +41,12 @@ export type DayOfWeek =
   | "saturday"
   | "sunday"
 
-export type AnimeBroadcast = {
+interface AnimeBroadcast {
   dayOfTheWeek: DayOfWeek
   startTime: Date
 }
 
-export type AnimeSource = {
+interface AnimeSource {
   id: number
   name:
     | "4-koma"
@@ -66,23 +66,23 @@ export type AnimeSource = {
     | "web_novel"
 }
 
-export type AnimeRating = {
+interface AnimeRating {
   id: number
   name: "G" | "PG" | "PG-13" | "R" | "R+" | "Rx"
 }
 
-export type AnimeRelationType =
+type AnimeRelationType =
   | "sequel"
   | "prequel"
   | "alternative_version"
   | "alternative_setting"
 
-export type AnimeRelatedAnime = {
+interface AnimeRelatedAnime {
   animeNode: IAnime
   type: AnimeRelationType
 }
 
-export type AnimeScore = {
+interface AnimeScore {
   animation: number
   music: number
   plot: number
@@ -90,42 +90,12 @@ export type AnimeScore = {
   mean: number
 }
 
-export type Episode = {
+interface Episode {
   title: string
   episodeNum: number
 }
 
-// export type Anime = {
-//   id: number | null
-//   title: string
-//   episodesCount: number
-//   alternativeTitles: AlternativeTitles
-//   startDate: Date | null
-//   endDate: Date | null
-//   synopsis: string | null
-//   nsfw: boolean
-//   createdAt: string
-//   updatedAt: string
-//   mediaType: AnimeMediaType | null
-//   status: AnimeStatus
-//   tags: AnimeTag[]
-//   numEpisodes: number | null
-//   startSeason: AnimeStartSeason | null
-//   broadcast: AnimeBroadcast
-//   source: AnimeSource | null
-//   averageEpisodeDuration: number
-//   rating: AnimeRating | null
-//   relationships: AnimeRelatedAnime[]
-//   studios: AnimeStudio[] | null
-//   malId: number | null
-//   score: AnimeScore
-//   popularity: number
-//   hide: boolean
-//   thumbnailUrl: string
-//   bannerUrl: string
-// }
-
-export type Anime = {
+interface Anime {
   id: number
   title: string
   episodesCount: number
@@ -155,7 +125,7 @@ export type Anime = {
   bannerUrl: string
 }
 
-export type AnimeFilters = {
+interface AnimeFilters {
   search: string
   tagIds: number[]
   studioId: number
@@ -166,14 +136,14 @@ export type AnimeFilters = {
   page: number
 }
 
-export type UserListStatus =
+type UserListStatus =
   | "WATCHING"
   | "COMPLETED"
   | "ON_HOLD"
   | "DROPPED"
   | "PLAN_TO_WATCH"
 
-export type UserList = {
+interface UserList {
   score: AnimeScore | null
   watchedEpisodes: number
   status: UserListStatus | null
@@ -181,10 +151,42 @@ export type UserList = {
   animeNode?: Anime
 }
 
-export type UserListReq = {
+interface UserListReq {
   score: Omit<AnimeScore, "mean"> | null
   watchedEpisodes: number
   status: UserListStatus | null
   favorite: boolean
   animeNode?: Anime
+}
+
+interface ImportAnimeRequest {
+  malId: number
+  aniDB: {
+    id: number
+    episodeType: AniDBEpisodeType
+  }
+}
+
+export {
+  AlternativeTitles,
+  AnimeMediaType,
+  AnimeStatus,
+  AnimeTag,
+  AnimeStudio,
+  AnimeSeason,
+  AnimeStartSeason,
+  DayOfWeek,
+  AnimeBroadcast,
+  AnimeSource,
+  AnimeRating,
+  AnimeRelationType,
+  AnimeRelatedAnime,
+  AnimeScore,
+  Episode,
+  Anime,
+  AnimeFilters,
+  UserListStatus,
+  UserList,
+  UserListReq,
+  ImportAnimeRequest,
 }

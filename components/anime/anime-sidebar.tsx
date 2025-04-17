@@ -2,12 +2,12 @@
 
 import { ReactNode } from "react"
 import { useAnime } from "@/contexts/local/anime"
+import { AnimeDto } from "@/gen/anime"
 import { format } from "date-fns"
 import { pl } from "date-fns/locale"
 import { TFunction } from "i18next"
 import { useTranslation } from "react-i18next"
 
-import { Anime } from "@/types/anime"
 import { useUser } from "@/hooks/store"
 
 import { ScoreForm } from "../score/score-form"
@@ -54,7 +54,7 @@ function AnimeSidebar() {
 
 interface AnimeInfoField {
   name: string
-  body: (anime: Anime, t: TFunction<"translation", undefined>) => ReactNode
+  body: (anime: AnimeDto, t: TFunction<"translation", undefined>) => ReactNode
 }
 
 const ANIME_INFO_FIELDS: AnimeInfoField[] = [
@@ -108,7 +108,8 @@ const ANIME_INFO_FIELDS: AnimeInfoField[] = [
   },
 ]
 
-function generateAnimeInfoFields(anime: Anime) {
+function generateAnimeInfoFields(anime: AnimeDto) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { t } = useTranslation()
 
   return ANIME_INFO_FIELDS.map((field) => (

@@ -1,16 +1,10 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React from "react"
 import Image from "next/image"
-import { useSearchParams } from "next/navigation"
 import { useAnime } from "@/contexts/local/anime/use-anime"
-import { FansubService } from "@/services/client/fansub.service"
-import { TRANSLATION } from "@/translations/pl-pl"
-import { Dot, Ellipsis, Share2 } from "lucide-react"
+import { Dot, Ellipsis } from "lucide-react"
 
-import { Anime, Episode } from "@/types/anime"
-import { Subtitles, Translation } from "@/types/fansub"
-import { ItemPage } from "@/types/page"
 import { useUser } from "@/hooks/store"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import {
@@ -19,86 +13,20 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 import { AnimeSidebar, SimpleAnimeCard } from "@/components/anime"
-import { EpisodeCard } from "@/components/episode/episode-card"
 import { EpisodeList } from "@/components/episode/episode-list"
-import { SubtitlesDownload, SubtitlesForm } from "@/components/subtitles"
 
-const fansubService = new FansubService()
-
-interface AnimeDetailsContentProps {
-  episodes: ItemPage<Episode>
-  viewport: string
-  translations: Translation[]
-}
-
-export function AnimeDetailsContent({
-  episodes,
-  viewport,
-  translations,
-}: AnimeDetailsContentProps) {
-  const [selectedEpisodes, setSelectedEpisodes] = React.useState<number[]>([])
-  const [subtitles, setSubtitles] = useState<Subtitles[]>([])
-  const [groupName, setGroupName] = useState("")
-  const [sort, setSort] = useState("asc")
-
+export function AnimeDetailsContent() {
   const isDesktop = useMediaQuery("(min-width: 768px)")
-  const searchParams = useSearchParams()
   const anime = useAnime()
   const user = useUser()
-
-  const switchEpisode = (episodeNum: number) => {
-    if (selectedEpisodes.includes(episodeNum))
-      setSelectedEpisodes((episodes) =>
-        episodes.filter((ep) => ep != episodeNum)
-      )
-    else setSelectedEpisodes((episodes) => [...episodes, episodeNum])
-  }
-
-  const generateGroupUrl = () => {
-    const url = new URL(window.location.href)
-    url.searchParams.set("group", groupName)
-
-    navigator.clipboard.writeText(url.toString())
-  }
-
-  useEffect(() => {
-    const groupName = searchParams.get("group")
-
-    if (groupName) setGroupName(groupName)
-  }, [setGroupName])
-
-  useEffect(() => {
-    if (!groupName) return
-
-    fansubService
-      .getSubtitles(groupName, anime.id!)
-      .then(({ data }) => setSubtitles(data.content))
-  }, [groupName])
 
   // if (!isDesktop || viewport === "mobile")
   //   return <MobileAnimeDetailsContent anime={anime} />

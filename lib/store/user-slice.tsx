@@ -1,25 +1,24 @@
 "use client"
 
+import { UserDto } from "@/gen/users"
 import { createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 
-import { User } from "@/types/user"
-
 export interface IUserState {
   isAuthorized: boolean
-  user: User | null
+  user: UserDto | null
 }
 
 const initialState: IUserState = {
   isAuthorized: false,
-  user: null as unknown as User,
+  user: null,
 }
 
 export const userSlice = createSlice({
   name: "userStore",
   initialState: initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<User>) => {
+    setUser: (state, action: PayloadAction<UserDto>) => {
       state.user = action.payload
       state.isAuthorized = true
     },
@@ -29,7 +28,7 @@ export const userSlice = createSlice({
     initialize(state, action: PayloadAction<IUserState>) {
       return action.payload
     },
-    logout(state) {
+    logout() {
       return initialState
     },
   },

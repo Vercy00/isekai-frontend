@@ -1,27 +1,28 @@
 "use client"
 
 import { createContext, Dispatch, SetStateAction } from "react"
+import { AnimeDto, AnimeListStatusDto, PageEpisodeDto } from "@/gen/anime"
+import { SubtitleDto, TranslationDto } from "@/gen/fansub"
 
-import { Anime, Episode, UserList } from "@/types/anime"
-import { Subtitles, Translation } from "@/types/fansub"
-import { ItemPage, ItemPageFilters } from "@/types/page"
+import { Episode } from "@/types/anime"
+import { ItemPageFilters } from "@/types/page"
 
 interface AnimeContext {
-  anime: Anime
+  anime: AnimeDto
   episode: {
-    episodes: ItemPage<Episode>
+    episodes: PageEpisodeDto
     loadEpisodes: (
       filters: ItemPageFilters<Episode>,
       groupName?: string
     ) => void
     loading: boolean
-    subtitles: Subtitles[]
+    subtitles: SubtitleDto[]
   }
   userList: {
-    userList: UserList
-    setUserList: Dispatch<SetStateAction<UserList>>
+    userList: AnimeListStatusDto
+    setUserList: Dispatch<SetStateAction<AnimeListStatusDto>>
   }
-  translations: Translation[]
+  translations: TranslationDto[]
 }
 
 const AnimeContext = createContext<AnimeContext | null>(null)

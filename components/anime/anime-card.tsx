@@ -3,10 +3,10 @@
 import React, { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
+import { AnimeNodeDto, RelationshipDtoTypeEnum } from "@/gen/anime"
+import { FansubGroupNodeDto } from "@/gen/fansub"
 import { Dot, Flame, Star, Tv2 } from "lucide-react"
 
-import { Anime, AnimeRelationType } from "@/types/anime"
-import { GroupNode } from "@/types/fansub"
 import { cn } from "@/lib/utils"
 
 import { Badge } from "../ui/badge"
@@ -16,13 +16,13 @@ import { AnimeThumbnail } from "./anime-thumbnail"
 const colors = ["109 40 217", "253 186 116", "163 230 53"]
 
 interface AnimeCardProps {
-  anime: Anime
+  anime: AnimeNodeDto
   number?: number
   onCardOpenChange?: (open: boolean) => void
   className?: React.ComponentProps<"div">["className"]
-  type?: AnimeRelationType
+  type?: RelationshipDtoTypeEnum
   collisionBox?: HTMLDivElement | null
-  group?: GroupNode
+  group?: FansubGroupNodeDto
   as?: "div" | "link"
 }
 
@@ -41,10 +41,10 @@ export function SimpleAnimeCard({
     <>
       <AnimeThumbnail
         thumbnailUrl={anime.thumbnailUrl!}
-        className="rounded-lg border-2 border-primary"
+        className="border-primary rounded-lg border-2"
       >
         {!!type && (
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 transform rounded-md bg-secondary/75 px-3 py-1 text-foreground">
+          <div className="bg-secondary/75 text-foreground absolute bottom-2 left-1/2 -translate-x-1/2 transform rounded-md px-3 py-1">
             {type}
           </div>
         )}
@@ -52,10 +52,10 @@ export function SimpleAnimeCard({
 
       {number !== undefined && (
         <div className="absolute top-2 flex w-full justify-between gap-2 px-2">
-          <div className="line-clamp-1 block truncate rounded-md bg-neutral-600/80 px-3.5 py-0.5 text-sm text-foreground">
+          <div className="text-foreground line-clamp-1 block truncate rounded-md bg-neutral-600/80 px-3.5 py-0.5 text-sm">
             {group?.name}
           </div>
-          <div className="rounded-md bg-neutral-600/80 px-3.5 py-0.5 text-sm text-foreground">
+          <div className="text-foreground rounded-md bg-neutral-600/80 px-3.5 py-0.5 text-sm">
             {number}
           </div>
         </div>
@@ -79,7 +79,7 @@ export function SimpleAnimeCard({
         {as === "div" ? (
           <div
             className={cn(
-              "relative block w-48 font-medium text-neutral-400 transition-all hover:text-foreground",
+              "hover:text-foreground relative block w-48 font-medium text-neutral-400 transition-all",
               className
             )}
           >
@@ -89,7 +89,7 @@ export function SimpleAnimeCard({
           <Link
             href={`/anime/${anime.id}/${anime.title.replaceAll(" ", "_").replaceAll(/[^a-zA-Z0-9_ ]/gm, "_")}${group ? `?group=${group.name}` : ""}`}
             className={cn(
-              "relative block w-48 font-medium text-neutral-400 transition-all hover:text-foreground",
+              "hover:text-foreground relative block w-48 font-medium text-neutral-400 transition-all",
               className
             )}
             onMouseDown={() => setMouseDown(true)}
@@ -110,11 +110,11 @@ export function SimpleAnimeCard({
           <div className="line-clamp-2 text-left text-lg">{anime.title}</div>
           <div className="flex gap-2">
             <div className="flex items-center gap-1">
-              <Star className="size-5 gap-1 text-primary" />
+              <Star className="text-primary size-5 gap-1" />
               {anime.score?.mean}
             </div>
             <div className="flex items-center gap-1">
-              <Flame className="size-5 text-primary" />
+              <Flame className="text-primary size-5" />
               {anime.popularity}
             </div>
           </div>
@@ -144,7 +144,7 @@ export function MediumAnimeCard({
         <Link
           href={`/anime/${anime.id}/${anime.title.replaceAll(" ", "_").replaceAll(/[^a-zA-Z0-9_ ]/gm, "_")}`}
           className={cn(
-            "relative flex h-28 w-full overflow-hidden rounded-lg bg-secondary transition-all hover:text-foreground md:hover:opacity-80",
+            "bg-secondary hover:text-foreground relative flex h-28 w-full overflow-hidden rounded-lg transition-all md:hover:opacity-80",
             className
           )}
         >
@@ -205,11 +205,11 @@ export function MediumAnimeCard({
           <div className="line-clamp-2 text-lg">{anime.title}</div>
           <div className="flex gap-2">
             <div className="flex items-center gap-1">
-              <Star className="size-5 gap-1 text-primary" />
+              <Star className="text-primary size-5 gap-1" />
               {anime.score?.mean}
             </div>
             <div className="flex items-center gap-1">
-              <Flame className="size-5 text-primary" />
+              <Flame className="text-primary size-5" />
               {anime.popularity}
             </div>
           </div>

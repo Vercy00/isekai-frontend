@@ -144,7 +144,7 @@ export function MobileAnimeDetailsContent({ anime }: AnimeDetailsContentProps) {
 
               <div>
                 <div className="font-semibold">Status</div>
-                <div>{anime.status || "unknown"}</div>
+                <div>{anime.status.name || "unknown"}</div>
               </div>
 
               <div>

@@ -1,10 +1,10 @@
 "use client"
 
 import React, { useRef, useState } from "react"
+import { AnimeNodeDto } from "@/gen/anime"
+import { TranslationDto } from "@/gen/fansub"
 import Autoplay from "embla-carousel-autoplay"
 
-import { Anime } from "@/types/anime"
-import { Translation } from "@/types/fansub"
 import { cn } from "@/lib/utils"
 import {
   Carousel,
@@ -18,7 +18,7 @@ import { SimpleAnimeCard } from "./anime-card"
 
 interface AutoplayAnimeCarouselProps {
   delay?: number
-  itemList: Anime[] | Translation[]
+  itemList: AnimeNodeDto[] | TranslationDto[]
 }
 
 export function AutoplayAnimeCarousel({
@@ -57,16 +57,17 @@ export function AutoplayAnimeCarousel({
             >
               <SimpleAnimeCard
                 anime={
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   (item as any)?.title !== undefined
-                    ? (item as Anime)
-                    : (item as Translation).animeNode
+                    ? (item as AnimeNodeDto)
+                    : ((item as TranslationDto).animeNode as AnimeNodeDto)
                 }
                 onCardOpenChange={(open) =>
                   setChildOpen((c) => ({ ...c, [index]: open }))
                 }
                 className="scale-95 md:group-hover:scale-100"
-                number={(item as any).subtitlesCount}
-                group={(item as any).group}
+                number={(item as TranslationDto).subtitlesCount}
+                group={(item as TranslationDto).group}
                 collisionBox={contentRef.current}
               />
             </CarouselItem>

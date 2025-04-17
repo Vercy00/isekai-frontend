@@ -9,16 +9,15 @@ import {
 } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
 import { useAnime, useEpisodes, useTranslations } from "@/contexts/local/anime"
+import { PageEpisodeDto } from "@/gen/anime"
 import { CircularProgress } from "@mui/material"
 import { useDebounce } from "@uidotdev/usehooks"
 import { Share2 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
-import { Episode } from "@/types/anime"
-import { ItemPage, SortDirection } from "@/types/page"
-import { useUser } from "@/hooks/store"
+import { SortDirection } from "@/types/page"
 
-import { SubtitlesDownload, SubtitlesForm } from "../subtitles"
+// import { SubtitlesDownload, SubtitlesForm } from "../subtitles"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Button } from "../ui/button"
 import {
@@ -55,6 +54,7 @@ enum FiltersActionKind {
 
 interface FiltersAction {
   type: FiltersActionKind
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   payload: any
 }
 
@@ -98,7 +98,6 @@ function EpisodeList() {
   const { episodes, loadEpisodes, loading, subtitles } = useEpisodes()
   const { t } = useTranslation()
   const anime = useAnime()
-  const user = useUser()
 
   const switchEpisode = useCallback(
     (episodeNum: number) => {
@@ -194,11 +193,11 @@ function EpisodeList() {
 
           {groupName && (
             <>
-              <SubtitlesDownload
+              {/* <SubtitlesDownload
                 selectedEpisodes={selectedEpisodes}
                 groupName={groupName}
                 animeId={anime.id}
-              />
+              /> */}
 
               <Popover>
                 <PopoverTrigger asChild>
@@ -225,7 +224,7 @@ function EpisodeList() {
             </>
           )}
 
-          {translations.some(
+          {/* {translations.some(
             ({ authors, group }) =>
               authors.some((author) => author.member.id === user?.id) ||
               group.admins.some(({ id }) => id === user?.id)
@@ -235,7 +234,7 @@ function EpisodeList() {
               translations={translations}
               animeId={anime.id!}
             />
-          )}
+          )} */}
         </div>
 
         <Select
@@ -339,7 +338,7 @@ function EpisodeList() {
 }
 
 interface EpisodePaginationProps {
-  episodes: ItemPage<Episode>
+  episodes: PageEpisodeDto
   filtersDispatch: ActionDispatch<[action: FiltersAction]>
 }
 
@@ -351,14 +350,11 @@ function EpisodePagination({
     const set = new Set<number>()
 
     set.add(0)
-    set.add(episodes.page.totalPages - 1)
+    set.add(episodes.totalPages - 1)
 
-    for (let i = -1; i < Math.min(episodes.page.totalPages, 2); i++) {
+    for (let i = -1; i < Math.min(episodes.totalPages, 2); i++) {
       set.add(
-        Math.max(
-          Math.min(episodes.page.number + i, episodes.page.totalPages - 1),
-          0
-        )
+        Math.max(Math.min(episodes.number + i, episodes.totalPages - 1), 0)
       )
     }
 
@@ -368,14 +364,14 @@ function EpisodePagination({
   return (
     <Pagination>
       <PaginationContent>
-        {episodes.page.number > 0 && (
+        {episodes.number > 0 && (
           <PaginationItem>
             <PaginationPrevious
               href="#episodes"
               onClick={() =>
                 filtersDispatch({
                   type: FiltersActionKind.PAGE,
-                  payload: episodes.page.number - 1,
+                  payload: episodes.number - 1,
                 })
               }
             />
@@ -387,7 +383,7 @@ function EpisodePagination({
             <PaginationItem key={curr}>
               <PaginationLink
                 href="#episodes"
-                isActive={curr === episodes.page.number}
+                isActive={curr === episodes.number}
                 onClick={() =>
                   filtersDispatch({
                     type: FiltersActionKind.PAGE,
@@ -411,134 +407,14 @@ function EpisodePagination({
           return acc
         }, [])}
 
-        {episodes.page.number + 1 < episodes.page.totalPages && (
+        {episodes.number + 1 < episodes.totalPages && (
           <PaginationItem>
             <PaginationNext
               href="#episodes"
               onClick={() =>
                 filtersDispatch({
                   type: FiltersActionKind.PAGE,
-                  payload: episodes.page.number + 1,
-                })
-              }
-            />
-          </PaginationItem>
-        )}
-      </PaginationContent>
-    </Pagination>
-  )
-
-  // TODO: SET
-  return (
-    <Pagination>
-      <PaginationContent>
-        {episodes.page.number > 0 && (
-          <PaginationItem>
-            <PaginationPrevious
-              href="#episodes"
-              onClick={() =>
-                filtersDispatch({
-                  type: FiltersActionKind.PAGE,
-                  payload: episodes.page.number - 1,
-                })
-              }
-            />
-          </PaginationItem>
-        )}
-
-        {[...Array(Math.min(episodes.page.totalPages, 2))].map((_, i) => (
-          <PaginationItem key={i}>
-            <PaginationLink
-              href="#episodes"
-              isActive={i === episodes.page.number}
-              onClick={() =>
-                filtersDispatch({
-                  type: FiltersActionKind.PAGE,
-                  payload: i,
-                })
-              }
-            >
-              {i + 1}
-            </PaginationLink>
-          </PaginationItem>
-        ))}
-
-        {episodes.page.number > 3 && (
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-        )}
-
-        {[
-          ...Array(
-            Math.max(
-              Math.min(episodes.page.totalPages - episodes.page.number, 3),
-              0
-            )
-          ),
-        ].map((_, i) => {
-          const val = episodes.page.number + i
-
-          if (val < 3 || val > episodes.page.totalPages - 2) return
-
-          return (
-            <PaginationItem key={val - 1}>
-              <PaginationLink
-                href="#episodes"
-                isActive={val - 1 === episodes.page.number}
-                onClick={() =>
-                  filtersDispatch({
-                    type: FiltersActionKind.PAGE,
-                    payload: val - 1,
-                  })
-                }
-              >
-                {val}
-              </PaginationLink>
-            </PaginationItem>
-          )
-        })}
-
-        {episodes.page.totalPages - episodes.page.number > 4 && (
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-        )}
-
-        {episodes.page.totalPages > 2 &&
-          [...Array(2)]
-            .map((_, i) => {
-              const val = episodes.page.totalPages - i
-
-              if (val < 3) return
-
-              return (
-                <PaginationItem key={val}>
-                  <PaginationLink
-                    href="#episodes"
-                    isActive={val - 1 === episodes.page.number}
-                    onClick={() =>
-                      filtersDispatch({
-                        type: FiltersActionKind.PAGE,
-                        payload: val - 1,
-                      })
-                    }
-                  >
-                    {val}
-                  </PaginationLink>
-                </PaginationItem>
-              )
-            })
-            .reverse()}
-
-        {episodes.page.number + 1 < episodes.page.totalPages && (
-          <PaginationItem>
-            <PaginationNext
-              href="#episodes"
-              onClick={() =>
-                filtersDispatch({
-                  type: FiltersActionKind.PAGE,
-                  payload: episodes.page.number + 1,
+                  payload: episodes.number + 1,
                 })
               }
             />

@@ -1,19 +1,69 @@
 {
-  "gg": {
-    "wp": "aaa"
-  },
   "panel": {
     "user": "Użytkownik",
     "profile": "Profil",
     "password": "Hasło",
     "email": "Email",
     "anime": "Anime",
-    "request_edit_anime": "Edytowanie",
-    "request_import_anime": "Import",
+    "edit": "Edytowanie",
+    "import": "Importowanie",
+    "add": "Dodawanie",
     "fansub": "Fansub",
     "admin": "Admin",
     "main": "Główne",
     "page": "Strona",
     "links": "Odnośniki"
+  },
+  "anidb": {
+    "episode_type": {
+      "regular": "Regularny",
+      "special": "Specjalny",
+      "credit": "Opening/Ending",
+      "trailer": "Trailer/Promocja/Reklama",
+      "parody": "Parodia",
+      "other": "Inne"
+    }
+  },
+  "anime_import": {
+    "anidb_episode_type": "Typ odcinków na AniDB",
+    "id_input_description": "Wklej cały link z {0} do anime lub podaj id.",
+    "anidb_episode_type_input_description": "Typ odcinka znajduje się po najechaniu myszką na numer odcinka. {0}",
+    "req_submit_text": "Wyślij prośbę o import anime",
+    "submit_text": "Importuj anime"
+  },
+  "anime_edit": {
+    "title": "Tytuł",
+    "req_submit_text": "Wyślij prośbę o edycję anime",
+    "submit_text": "Edytuj anime",
+    "title_description": "Tytuł japoński w romanji.",
+    "alternative_titles_en": "Tytuł angielski",
+    "alternative_titles_jp": "Tytuł japoński",
+    "alternative_titles_jp_description": "Tytuł w kanji.",
+    "alternative_titles_synonyms": "Inne tytuły",
+    "alternative_titles_synonyms_field": "Inny tytuł",
+    "alternative_titles_synonyms_description": "Wszystkie inne tytuły/skróty.",
+    "alternative_titles_synonyms_add": "Dodaj inny tytuł",
+    "synopsis": "Opis",
+    "start_date": "Data rozpoczęcia emisji",
+    "start_date_description": "Data rozpoczęcia emisji w strefie czasowej JST.",
+    "end_date": "Data zakończenia emisji",
+    "end_date_description": "Data zakończenia emisji w strefie czasowej JST.",
+    "nsfw": "NSFW",
+    "hide": "Ukryj",
+    "hide_description": "Ukryj anime przed wyszukiwaniem. Anime będzie wciąż dostępne pod URL (isekai.pl/anime/{id}) dla każdego.",
+    "num_episodes": "Ilość odcinków",
+    "num_episodes_description": "Ilość odcinków planowanych do emisji.",
+    "thumbnail": "Miniaturka",
+    "change_thumbnail": "Zmień miniaturkę",
+    "banner": "Baner",
+    "change_banner": "Zmień baner"
+  },
+  "date_time_picker": {
+    "date_format": "dd/MM/YYYY HH:mm",
+    "date_format_code": "dd/MM/yyyy HH:mm"
+  },
+  "validation": {
+    "not_blank": "Tekst nie może być pusty.",
+    "file_image": "Plik musi być obrazem."
   }
 }
